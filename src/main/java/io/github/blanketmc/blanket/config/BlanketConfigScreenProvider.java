@@ -7,12 +7,17 @@ import io.github.blanketmc.blanket.FabricClientModInitializer;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,6 +41,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         ConfigCategory general = builder.getOrCreateCategory(new TranslatableText("blanket-client-tweaks.config.general")); //we can ignore the title, until we have more categories
         addEntriesToCategory(general, builder.entryBuilder(), config);
 
+        ConfigCategory bulkActions = builder.getOrCreateCategory(new TranslatableText("blanket-client-tweaks.config.bulk"));
+        addBulkModeCategory(bulkActions, builder.entryBuilder(), config, parent);
         return builder.build();
     }
 
@@ -117,4 +124,98 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         return description;
     }
 
+    public static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
+        var action = new ActionData();
+        var actionEntry = entryBuilder.startEnumSelector(
+                new TranslatableText("blanket-client-tweaks.config.chooseBulk"),
+                ActionType.class,
+                action.action);
+
+        actionEntry.setSaveConsumer(actionType -> action.action = actionType);
+        actionEntry.setDefaultValue(ActionType.ENABLE);
+
+        var actionSelectorButton = actionEntry.build();
+        category.addEntry(actionSelectorButton);
+
+        var typeSelector = entryBuilder.startDropdownMenu(
+                new TranslatableText("blanket-client-tweaks.config.chooseCategory"),
+                DropdownMenuBuilder.TopCellElementBuilder.of(action.category, s -> {
+                    try {
+                        return ConfigEntry.Category.valueOf(s);
+                    } catch(IllegalArgumentException ignore) { }
+                    return null;
+                }, anEnum -> new LiteralText(anEnum.toString())),
+                DropdownMenuBuilder.CellCreatorBuilder.of(category1 -> new LiteralText(category1.toString())));
+
+        typeSelector.setDefaultValue(ConfigEntry.Category.RECOMMENDED);
+        typeSelector.setSelections(Arrays.stream(ConfigEntry.Category.values()).collect(Collectors.toSet()));
+
+        typeSelector.setSaveConsumer(anEnum -> action.category = (ConfigEntry.Category) anEnum);
+        var typeSelectorButton = typeSelector.build();
+
+        category.addEntry(typeSelectorButton);
+
+
+        var actionButton = new PressableButtonEntry(new TranslatableText("blanket-client-tweaks.config.doBulkAction"), () -> {
+            if (typeSelectorButton.getError().isPresent()) return;
+            action.action = actionSelectorButton.getValue();
+            action.category = typeSelectorButton.getValue();
+
+            MinecraftClient.getInstance().setScreen(new ConfirmScreen(t -> {
+                if (t) {
+                    ConfigHelper.iterateOnConfig((field, configEntry) -> {
+                        if (field.getType().equals(Boolean.TYPE) && Arrays.stream(field.getAnnotation(ConfigEntry.class).categories()).anyMatch(category12 -> category12 == action.category)) {
+                            field.set(config, action.action.apply(field.getBoolean(config)));
+                        }
+                    });
+                }
+                MinecraftClient.getInstance().setScreen(getScreen(parent, config));
+            }, new TranslatableText("blanket-client-tweaks.config.confirmTitle"), new TranslatableText(
+                    "blanket-client-tweaks.config.confirmText",
+                    new LiteralText(action.action.toString()).formatted(Formatting.GREEN),
+                    new LiteralText(action.category.toString()).formatted(Formatting.BLUE)
+            )));
+        },
+                () -> {
+
+                    Text actionText = new LiteralText(actionSelectorButton.getValue().toString()).formatted(Formatting.GREEN);
+                    if (typeSelectorButton.getError().isEmpty()) {
+                        action.category = typeSelectorButton.getValue();
+                    }
+
+                    Text category13 = new LiteralText(action.category.toString()).formatted(Formatting.BLUE);
+
+
+                    return new TranslatableText("blanket-client-tweaks.config.doBulkAction", actionText, category13);
+                });
+
+        //3 nested lambdas :D
+
+
+        category.addEntry(entryBuilder.startTextDescription(new TranslatableText("blanket-client-tweaks.config.bulkDescription")).build());
+        category.addEntry(actionButton);
+
+
+    }
+
+    private static enum ActionType {
+        ENABLE(b -> true),
+        DISABLE(b -> false),
+        TOGGLE(b -> !b),
+        ;
+        private final Function<Boolean, Boolean> applier;
+
+        ActionType(Function<Boolean, Boolean> applier) {
+            this.applier = applier;
+        }
+
+        public boolean apply(boolean b) {
+            return applier.apply(b);
+        }
+    }
+
+    private static class ActionData {
+        ActionType action = ActionType.ENABLE;
+        ConfigEntry.Category category = ConfigEntry.Category.RECOMMENDED;
+    }
 }
