@@ -21,6 +21,9 @@ public final class Config {
     @ConfigEntry(description = "select a category", categories = {EXPERIMENTAL, RECOMMENDED})
     public ConfigEntry.Category enumOption = RECOMMENDED;
 
+    @ConfigEntry(description = "Fix inventory can not be closed by mouse button.\nMC-577", categories = {BUGFIX, RECOMMENDED})
+    public boolean fixMouseCloseNotHandled = true;
+
     //not annotated to catch errors
     public boolean theBlackSheep = true;
 }
