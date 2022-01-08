@@ -24,6 +24,9 @@ public final class Config {
     @ConfigEntry(description = "Fix inventory can not be closed by mouse button.\nMC-577", categories = {BUGFIX, RECOMMENDED})
     public boolean fixMouseCloseNotHandled = true;
 
+    @ConfigEntry(description = "Fix chat lag on multiplayer servers", categories = {BUGFIX, RECOMMENDED})
+    public boolean fixChatLagFix = true;
+
     //not annotated to catch errors
     public boolean theBlackSheep = true;
 }
