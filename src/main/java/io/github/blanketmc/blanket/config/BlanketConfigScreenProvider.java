@@ -126,6 +126,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     public static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
         var action = new ActionData();
+
+        // Action selector button
         var actionEntry = entryBuilder.startEnumSelector(
                 new TranslatableText("blanket-client-tweaks.config.chooseBulk"),
                 ActionType.class,
@@ -137,6 +139,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         var actionSelectorButton = actionEntry.build();
         category.addEntry(actionSelectorButton);
 
+
+        //Category selector button
         var typeSelector = entryBuilder.startDropdownMenu(
                 new TranslatableText("blanket-client-tweaks.config.chooseCategory"),
                 DropdownMenuBuilder.TopCellElementBuilder.of(action.category, s -> {
@@ -150,12 +154,21 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         typeSelector.setDefaultValue(ConfigEntry.Category.RECOMMENDED);
         typeSelector.setSelections(Arrays.stream(ConfigEntry.Category.values()).collect(Collectors.toSet()));
 
+
+        MutableText categoryTypes = new LiteralText("Possible categories:").formatted(Formatting.GOLD);
+        for (var categoryEnum : ConfigEntry.Category.values()) {
+            categoryTypes.append(new LiteralText("\n" + categoryEnum.toString()).formatted(Formatting.BLUE));
+        }
+        typeSelector.setTooltip(categoryTypes);
+
+
         typeSelector.setSaveConsumer(anEnum -> action.category = (ConfigEntry.Category) anEnum);
         var typeSelectorButton = typeSelector.build();
 
         category.addEntry(typeSelectorButton);
 
 
+        // Pressable action button
         var actionButton = new PressableButtonEntry(new TranslatableText("blanket-client-tweaks.config.doBulkAction"), () -> {
             if (typeSelectorButton.getError().isPresent()) return;
             action.action = actionSelectorButton.getValue();
