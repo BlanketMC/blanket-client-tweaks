@@ -47,6 +47,17 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 17
 }
 
+/**
+ * Rename every resource file to lowercase. With that, we can allow Crowdin to translate.
+ */
+tasks.withType(Copy) {
+	eachFile {
+		rename {
+			String filename-> filename.toLowerCase()
+		}
+	}
+}
+
 java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
