@@ -1,38 +1,50 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "blanket-client-tweaks",
   "version": "${version}",
 
   "name": "Example Mod",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Me!"
+    "KosmX",
+    "Fx Morin"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://kosmx.dev/blanket",
+    "sources": "https://kosmx.dev/TODO"
   },
 
   "license": "CC0-1.0",
   "icon": "assets/modid/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "main": [],
+    "client": [
+      "io.github.blanketmc.blanket.FabricModInitializer"
+    ],
+    "modmenu": [
+      "io.github.blanketmc.blanket.config.BlanketConfigScreenProvider"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "blanket-client-tweaks.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.11.3",
+    "fabricloader": ">=0.12.12",
     "fabric": "*",
     "minecraft": "1.18.x",
     "java": ">=17"
   },
   "suggests": {
     "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/invalid"
+      }
+    }
   }
 }
