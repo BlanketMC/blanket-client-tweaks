@@ -12,32 +12,11 @@ import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
 public final class ConfigHelper {
 
     private static final Config defaults = new Config();
-
-    public static void optionFilter(Config config) {
-        Field[] fields = config.getClass().getFields();
-        for (Field field : fields) {
-            try {
-                if (!(field.get(field) instanceof Boolean)) continue;
-
-                ConfigEntry entry = field.getAnnotation(ConfigEntry.class);
-
-                for (ConfigEntry.Category category : entry.categories()) {
-                    if (category == ConfigEntry.Category.BUGFIX) {
-                        field.set(field, true);
-                        break;
-                    }
-                }
-
-            } catch(IllegalAccessException ignore) { }
-        }
-    }
 
     public static Screen getScreen(Screen parent, Config config) {
         ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslatableText("blanket-client-tweaks.config.title"));
@@ -128,6 +107,4 @@ public final class ConfigHelper {
         //TODO
         return new Config();
     }
-
-    //public record AnnotatedEntry (Field field, ConfigEntry annotation) {}
 }
