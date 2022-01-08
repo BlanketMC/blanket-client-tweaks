@@ -8,8 +8,11 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Level;
+
+import java.util.Arrays;
 
 
 /**
@@ -36,7 +39,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         return builder.build();
     }
 
-    private static void addEntriesToCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config){
+    private static void addEntriesToCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config) {
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
             var type = field.getType();
             if (type.equals(Boolean.TYPE)) {
@@ -57,9 +60,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(defVal);
 
                 //Description
-                if (!configEntry.description().equals("")) {
-                    entry.setTooltip(ConfigHelper.getTextComponent(configEntry.description(), null));
-                }
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories()));
 
                 category.addEntry(entry.build());
 
@@ -83,9 +84,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(clazz.cast(defVal));
 
                 //Description
-                if (!configEntry.description().equals("")) {
-                    entry.setTooltip(ConfigHelper.getTextComponent(configEntry.description(), null));
-                }
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories()));
 
                 category.addEntry(entry.build());
 
@@ -93,6 +92,29 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 FabricClientModInitializer.log(Level.ERROR, "Config: " + field.getName() + " can not be displayed: Unknown type", true);
             }
         });
+    }
+
+    private static Text fancyDescription(String desc, ConfigEntry.Category[] categories) {
+        MutableText description = new LiteralText("");
+        if (!desc.equals("")) {
+            description = ConfigHelper.getTextComponent(desc, null);
+
+            description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n\n"));
+        }
+
+        description.append(new LiteralText("Categories:\n").formatted(Formatting.LIGHT_PURPLE));
+
+        var iterator = Arrays.stream(categories).iterator();
+        while (iterator.hasNext()) {
+
+            var category = iterator.next();
+            description.append(new LiteralText(category.toString()).formatted(Formatting.BLUE));
+
+            if (iterator.hasNext()) {
+                description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
+            }
+        }
+        return description;
     }
 
 }
