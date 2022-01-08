@@ -1,0 +1,11 @@
+{
+  "blanket-client-tweaks.config.title": "Blanket Client Fixes",
+  "blanket-client-tweaks.config.general": "Toggle Features",
+  "blanket-client-tweaks.config.bulk": "Bulk Toggle Categories",
+  "blanket-client-tweaks.config.chooseBulk": "ACTION",
+  "blanket-client-tweaks.config.chooseCategory": "CATEGORY",
+  "blanket-client-tweaks.config.bulkDescription": "Set the action and category, and press the big red X button",
+  "blanket-client-tweaks.config.doBulkAction": "%s all %s tweak --->",
+  "blanket-client-tweaks.config.confirmTitle": "Do you really want to do bulk action?",
+  "blanket-client-tweaks.config.confirmText": "Do you really want to\n%s all %s tweaks?"
+}
