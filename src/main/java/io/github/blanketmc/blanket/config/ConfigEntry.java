@@ -32,7 +32,7 @@ public @interface ConfigEntry {
 
     /**
      * The MC issue it fixes. leave empty, if no issue
-     * Only the MC-??? part, newer the https:
+     * Only the MC-??? part, never the https:
      * @return MC-????
      */
     String issue() default "";
