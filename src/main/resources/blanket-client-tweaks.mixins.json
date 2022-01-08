@@ -6,7 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "HandledScreenMixin"
+    "HandledScreenMixin",
+    "YggdrasilUserApiService_syncBlockListMixin"
   ],
   "injectors": {
     "defaultRequire": 1
