@@ -67,7 +67,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(defVal);
 
                 //Description
-                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories()));
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issue()));
 
                 category.addEntry(entry.build());
 
@@ -91,7 +91,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(clazz.cast(defVal));
 
                 //Description
-                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories()));
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issue()));
 
                 category.addEntry(entry.build());
 
@@ -101,12 +101,18 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         });
     }
 
-    private static Text fancyDescription(String desc, ConfigEntry.Category[] categories) {
+    private static Text fancyDescription(String desc, ConfigEntry.Category[] categories, String issue) {
         MutableText description = new LiteralText("");
         if (!desc.equals("")) {
             description = ConfigHelper.getTextComponent(desc, null);
 
-            description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n\n"));
+            description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n"));
+
+            if (issue.equals("")) description.append(new LiteralText("\n"));
+        }
+
+        if (!issue.equals("")) {
+            description.append(new LiteralText("Fixes: ").formatted(Formatting.DARK_PURPLE).append(new LiteralText(issue).formatted(Formatting.DARK_AQUA))).append("\n\n");
         }
 
         description.append(new LiteralText("Categories:\n").formatted(Formatting.LIGHT_PURPLE));

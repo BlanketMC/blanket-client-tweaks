@@ -12,6 +12,7 @@ import java.lang.reflect.Type;
 
 public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeserializer<Config> {
     public static final Gson serializer;
+    public static final String mcIssuePrefix = "https://bugs.mojang.com/projects/MC/issues/";
 
     @Override
     public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -72,6 +73,10 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
 
         if (!configEntry.description().equals("")) {
             node.addProperty("description", configEntry.description());
+        }
+
+        if (!configEntry.issue().equals("")) {
+            node.addProperty("issue", mcIssuePrefix + configEntry.issue());
         }
 
         var categories = new JsonArray();

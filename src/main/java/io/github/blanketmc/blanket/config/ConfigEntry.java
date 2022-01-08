@@ -31,6 +31,13 @@ public @interface ConfigEntry {
     String description() default "";
 
     /**
+     * The MC issue it fixes. leave empty, if no issue
+     * Only the MC-??? part, newer the https:
+     * @return MC-????
+     */
+    String issue() default "";
+
+    /**
      * @return categories
      */
     Category[] categories();
