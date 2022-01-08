@@ -26,9 +26,7 @@ public class PressableButtonEntry extends AbstractConfigListEntry<Object> {
 
         this.displayTextSupplier = displayTextSupplier;
 
-        this.actionButton = new ButtonWidget(0, 0, 150, 20, NarratorManager.EMPTY, (widget) -> {
-            onPress.run();
-        });
+        this.actionButton = new ButtonWidget(0, 0, 150, 20, NarratorManager.EMPTY, (widget) -> onPress.run());
     }
 
     @Override
