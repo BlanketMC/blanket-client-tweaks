@@ -14,8 +14,6 @@ public class FabricClientModInitializer implements ClientModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LogManager.getLogger("blanket-client-tweaks");
 
-	public static Config config = new Config();
-
 	@Override
 	public void onInitializeClient() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -23,7 +21,7 @@ public class FabricClientModInitializer implements ClientModInitializer {
 		// Proceed with mild caution.
 
 
-		config = ConfigHelper.loadConfig();
+		Config.config = ConfigHelper.loadConfig();
 
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
@@ -33,7 +31,7 @@ public class FabricClientModInitializer implements ClientModInitializer {
 		AtomicInteger counter = new AtomicInteger(0);
 
 		ConfigHelper.iterateOnConfig((field, configEntry) -> {
-			if (field.getType().equals(Boolean.TYPE) && field.getBoolean(config)) {
+			if (field.getType().equals(Boolean.TYPE) && field.getBoolean(Config.config)) {
 				counter.incrementAndGet();
 			}
 		});

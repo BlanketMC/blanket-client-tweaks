@@ -22,7 +22,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> getScreen(parent, FabricClientModInitializer.config);
+        return parent -> getScreen(parent, Config.config);
     }
 
     public static Screen getScreen(Screen parent, Config config) {
