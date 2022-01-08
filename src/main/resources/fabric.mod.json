@@ -3,19 +3,19 @@
   "id": "blanket-client-tweaks",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Blanket Client-tweaks",
+  "description": "Fixing annoying features while trying to stay VANILLA!",
   "authors": [
     "KosmX",
     "Fx Morin"
   ],
   "contact": {
-    "homepage": "https://kosmx.dev/blanket",
-    "sources": "https://kosmx.dev/TODO"
+    "homepage": "https://github.com/BlanketMC/blanket-client-tweaks",
+    "sources": "https://github.com/BlanketMC/blanket-client-tweaks"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/blanket-client-tweaks/icon.png",
 
   "environment": "client",
   "entrypoints": {
