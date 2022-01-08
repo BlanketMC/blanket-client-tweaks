@@ -4,6 +4,7 @@ import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.FabricClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.Level;
@@ -30,7 +31,7 @@ public final class ConfigHelper {
         }
     }
 
-    public static Text getTextComponent(String str, String ifNull) {
+    public static MutableText getTextComponent(String str, String ifNull) {
         if (str.equals("")) {
             if (ifNull == null) throw new IllegalArgumentException();
             return new LiteralText(ifNull);
