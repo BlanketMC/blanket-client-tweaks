@@ -21,7 +21,7 @@
   "entrypoints": {
     "main": [],
     "client": [
-      "io.github.blanketmc.blanket.FabricModInitializer"
+      "io.github.blanketmc.blanket.FabricClientModInitializer"
     ],
     "modmenu": [
       "io.github.blanketmc.blanket.config.BlanketConfigScreenProvider"

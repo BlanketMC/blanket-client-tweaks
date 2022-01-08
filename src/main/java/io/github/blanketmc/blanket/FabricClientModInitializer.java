@@ -1,17 +1,20 @@
 package io.github.blanketmc.blanket;
 
+import io.github.blanketmc.blanket.config.ConfigHelper;
 import net.fabricmc.api.ClientModInitializer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class FabricModInitializer implements ClientModInitializer {
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class FabricClientModInitializer implements ClientModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LogManager.getLogger("blanket-client-tweaks");
 
-	public static final Config config = new Config();
+	public static Config config = new Config();
 
 	@Override
 	public void onInitializeClient() {
@@ -19,11 +22,23 @@ public class FabricModInitializer implements ClientModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		LOGGER.info("Hello Fabric world!");
 
-		//TODO load config, save if not loaded yet
+		config = ConfigHelper.loadConfig();
 
+		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
+	}
+
+	public static int countEnabledFeatures() {
+		AtomicInteger counter = new AtomicInteger(0);
+
+		ConfigHelper.iterateOnConfig((field, configEntry) -> {
+			if (field.getType().equals(Boolean.TYPE) && field.getBoolean(config)) {
+				counter.incrementAndGet();
+			}
+		});
+
+		return counter.get();
 	}
 
 	public static void log(Level level, String message){
