@@ -3,7 +3,7 @@ package io.github.blanketmc.blanket.config;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.blanketmc.blanket.Config;
-import io.github.blanketmc.blanket.FabricModInitializer;
+import io.github.blanketmc.blanket.FabricClientModInitializer;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -22,7 +22,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> getScreen(parent, FabricModInitializer.config);
+        return parent -> getScreen(parent, FabricClientModInitializer.config);
     }
 
     public static Screen getScreen(Screen parent, Config config) {
@@ -70,6 +70,14 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 Object obj = field.get(config);
                 var entry = entryBuilder.startEnumSelector(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), clazz, clazz.cast(obj));
 
+                entry.setSaveConsumer(anEnum -> {
+                    try {
+                        field.set(config, anEnum);
+                    } catch(IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+
                 //default value using mirror class
                 Object defVal = field.get(defaults);
                 entry.setDefaultValue(clazz.cast(defVal));
@@ -82,7 +90,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 category.addEntry(entry.build());
 
             } else {
-                FabricModInitializer.log(Level.ERROR, "Config: " + field.getName() + " can not be displayed: Unknown type", true);
+                FabricClientModInitializer.log(Level.ERROR, "Config: " + field.getName() + " can not be displayed: Unknown type", true);
             }
         });
     }
