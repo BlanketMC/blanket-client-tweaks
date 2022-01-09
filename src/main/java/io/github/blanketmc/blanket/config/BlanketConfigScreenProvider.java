@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 
 /**
  * Creates a cloth-config screen for mod configs
+ *
+ * USE THIS CLASS ONLY FOR MOD SCREEN
+ * Or the mod will crash if no ModMenu / Cloth Config is installed.
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class BlanketConfigScreenProvider implements ModMenuApi {
@@ -240,7 +243,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         return description;
     }
 
-    public static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
+    private static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
         ActionData action = new ActionData();
 
         // Action selector button
