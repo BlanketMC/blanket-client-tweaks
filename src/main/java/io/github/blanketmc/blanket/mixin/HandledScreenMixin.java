@@ -16,7 +16,7 @@ public abstract class HandledScreenMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void listenToCloseAction(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir){
-        if (Config.config.fixMouseCloseNotHandled) {
+        if (Config.mouseCloseNotHandledFix) {
             if (MinecraftClient.getInstance().options.keyInventory.matchesMouse(button)) {
                 this.onClose();
                 cir.setReturnValue(true);

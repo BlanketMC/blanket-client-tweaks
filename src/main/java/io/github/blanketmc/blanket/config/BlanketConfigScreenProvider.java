@@ -3,11 +3,13 @@ package io.github.blanketmc.blanket.config;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import io.github.blanketmc.blanket.Config;
-import io.github.blanketmc.blanket.FabricClientModInitializer;
+import io.github.blanketmc.blanket.ClientFixes;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
+import me.shedaniel.clothconfig2.gui.entries.DropdownBoxEntry;
+import me.shedaniel.clothconfig2.gui.entries.EnumListEntry;
+import me.shedaniel.clothconfig2.impl.builders.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -16,6 +18,7 @@ import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,11 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> getScreen(parent, Config.config);
+        return parent -> getScreen(parent, ClientFixes.config);
+    }
+
+    public static Config getDefaultsConfig() {
+        return defaults;
     }
 
     public static Screen getScreen(Screen parent, Config config) {
@@ -48,38 +55,117 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     private static void addEntriesToCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config) {
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
-            var type = field.getType();
+            Class<?> type = field.getType();
             if (type.equals(Boolean.TYPE)) {
+                BooleanToggleBuilder entry = entryBuilder.startBooleanToggle(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getBoolean(config));
 
-                var entry = entryBuilder.startBooleanToggle(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getBoolean(config));
-
-                //saveConsumer
-                entry.setSaveConsumer(aBoolean -> {
+                entry.setSaveConsumer(aBoolean -> { //saveConsumer
                     try {
+                        if (configEntry.listeners().length > 0) {
+                            Boolean currentValue = field.getBoolean(config);
+                            for (Class<? extends EntryListener<Boolean>> listener : configEntry.listeners()) {
+                                aBoolean = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aBoolean);
+                            }
+                        }
                         field.set(config, aBoolean);
-                    } catch(IllegalAccessException e) {
+                    } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 });
 
-                //default value using mirror class
-                boolean defVal = field.getBoolean(defaults);
-                entry.setDefaultValue(defVal);
-
-                //Description
-                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issue()));
-
+                entry.setDefaultValue(field.getBoolean(defaults)); //default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
+            } else if (type.equals(Float.TYPE)) {
+                FloatFieldBuilder entry = entryBuilder.startFloatField(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getFloat(config));
 
+                entry.setSaveConsumer(aFloat -> { //saveConsumer
+                    try {
+                        if (configEntry.listeners().length > 0) {
+                            Float currentValue = field.getFloat(config);
+                            for (Class<? extends EntryListener<Float>> listener : configEntry.listeners()) {
+                                aFloat = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aFloat);
+                            }
+                        }
+                        field.set(config, aFloat);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                entry.setDefaultValue(field.getFloat(defaults)); //default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
+                category.addEntry(entry.build());
+            } else if (type.equals(Double.TYPE)) {
+                DoubleFieldBuilder entry = entryBuilder.startDoubleField(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getDouble(config));
+
+                entry.setSaveConsumer(aDouble -> { //saveConsumer
+                    try {
+                        if (configEntry.listeners().length > 0) {
+                            Double currentValue = field.getDouble(config);
+                            for (Class<? extends EntryListener<Double>> listener : configEntry.listeners()) {
+                                aDouble = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aDouble);
+                            }
+                        }
+                        field.set(config, aDouble);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+                entry.setDefaultValue(field.getDouble(defaults));//default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
+                category.addEntry(entry.build());
+            } else if (type.equals(Integer.TYPE)) {
+                IntFieldBuilder entry = entryBuilder.startIntField(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getInt(config));
+
+                entry.setSaveConsumer(aInt -> { //saveConsumer
+                    try {
+                        if (configEntry.listeners().length > 0) {
+                            Integer currentValue = field.getInt(config);
+                            for (Class<? extends EntryListener<Integer>> listener : configEntry.listeners()) {
+                                aInt = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aInt);
+                            }
+                        }
+                        field.set(config, aInt);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+                entry.setDefaultValue(field.getInt(defaults));//default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
+                category.addEntry(entry.build());
+            } else if (type.equals(Long.TYPE)) {
+                LongFieldBuilder entry = entryBuilder.startLongField(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), field.getLong(config));
+
+                entry.setSaveConsumer(aLong -> { //saveConsumer
+                    try {
+                        if (configEntry.listeners().length > 0) {
+                            Long currentValue = field.getLong(config);
+                            for (Class<? extends EntryListener<Long>> listener : configEntry.listeners()) {
+                                aLong = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aLong);
+                            }
+                        }
+                        field.set(config, aLong);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+                entry.setDefaultValue(field.getLong(defaults));//default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
+                category.addEntry(entry.build());
             } else if (type.isEnum()) {
-
-                var clazz = (Class<Enum<?>>) type;
-
+                Class<Enum<?>> clazz = (Class<Enum<?>>) type;
                 Object obj = field.get(config);
-                var entry = entryBuilder.startEnumSelector(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), clazz, clazz.cast(obj));
+                EnumSelectorBuilder<Enum<?>> entry = entryBuilder.startEnumSelector(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), clazz, clazz.cast(obj));
 
                 entry.setSaveConsumer(anEnum -> {
                     try {
+                        if (configEntry.listeners().length > 0) {
+                            Enum<?> currentValue = clazz.cast(field.get(config));
+                            for (Class<? extends EntryListener<Enum<?>>> listener : configEntry.listeners()) {
+                                anEnum = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, anEnum);
+                            }
+                        }
                         field.set(config, anEnum);
                     } catch(IllegalAccessException e) {
                         e.printStackTrace();
@@ -91,36 +177,46 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(clazz.cast(defVal));
 
                 //Description
-                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issue()));
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
 
                 category.addEntry(entry.build());
 
             } else {
-                FabricClientModInitializer.log(Level.ERROR, "Config: " + field.getName() + " can not be displayed: Unknown type", true);
+                ClientFixes.log(Level.ERROR, "Config: " + field.getName() + " can not be displayed: Unknown type", true);
             }
         });
     }
 
-    private static Text fancyDescription(String desc, ConfigEntry.Category[] categories, String issue) {
+    private static Text fancyDescription(String desc, ConfigEntry.Category[] categories, String[] issues) {
         MutableText description = new LiteralText("");
         if (!desc.equals("")) {
             description = ConfigHelper.getTextComponent(desc, null);
 
             description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n"));
 
-            if (issue.equals("")) description.append(new LiteralText("\n"));
+            if (issues.length == 0) description.append(new LiteralText("\n"));
         }
 
-        if (!issue.equals("")) {
-            description.append(new LiteralText("Fixes: ").formatted(Formatting.DARK_PURPLE).append(new LiteralText(issue).formatted(Formatting.DARK_AQUA))).append("\n\n");
+        if (issues.length > 0) {
+            description.append(new LiteralText("Fixes:\n").formatted(Formatting.DARK_PURPLE));
+
+            Iterator<String> iterator = Arrays.stream(issues).iterator();
+            while (iterator.hasNext()) {
+                String issue = iterator.next();
+                description.append(new LiteralText(issue).formatted(Formatting.DARK_AQUA));
+                if (iterator.hasNext()) {
+                    description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
+                }
+            }
+            description.append("\n\n");
         }
 
         description.append(new LiteralText("Categories:\n").formatted(Formatting.LIGHT_PURPLE));
 
-        var iterator = Arrays.stream(categories).iterator();
+        Iterator<ConfigEntry.Category> iterator = Arrays.stream(categories).iterator();
         while (iterator.hasNext()) {
 
-            var category = iterator.next();
+            ConfigEntry.Category category = iterator.next();
             description.append(new LiteralText(category.toString()).formatted(Formatting.BLUE));
 
             if (iterator.hasNext()) {
@@ -131,10 +227,10 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
     }
 
     public static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
-        var action = new ActionData();
+        ActionData action = new ActionData();
 
         // Action selector button
-        var actionEntry = entryBuilder.startEnumSelector(
+        EnumSelectorBuilder<ActionType> actionEntry = entryBuilder.startEnumSelector(
                 new TranslatableText("blanket-client-tweaks.config.chooseBulk"),
                 ActionType.class,
                 action.action);
@@ -142,12 +238,12 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         actionEntry.setSaveConsumer(actionType -> action.action = actionType);
         actionEntry.setDefaultValue(ActionType.ENABLE);
 
-        var actionSelectorButton = actionEntry.build();
+        EnumListEntry<ActionType> actionSelectorButton = actionEntry.build();
         category.addEntry(actionSelectorButton);
 
 
         //Category selector button
-        var typeSelector = entryBuilder.startDropdownMenu(
+        DropdownMenuBuilder<ConfigEntry.Category> typeSelector = entryBuilder.startDropdownMenu(
                 new TranslatableText("blanket-client-tweaks.config.chooseCategory"),
                 DropdownMenuBuilder.TopCellElementBuilder.of(action.category, s -> {
                     try {
@@ -162,20 +258,20 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
 
         MutableText categoryTypes = new LiteralText("Possible categories:").formatted(Formatting.GOLD);
-        for (var categoryEnum : ConfigEntry.Category.values()) {
+        for (ConfigEntry.Category categoryEnum : ConfigEntry.Category.values()) {
             categoryTypes.append(new LiteralText("\n" + categoryEnum.toString()).formatted(Formatting.BLUE));
         }
         typeSelector.setTooltip(categoryTypes);
 
 
-        typeSelector.setSaveConsumer(anEnum -> action.category = (ConfigEntry.Category) anEnum);
-        var typeSelectorButton = typeSelector.build();
+        typeSelector.setSaveConsumer(anEnum -> action.category = anEnum);
+        DropdownBoxEntry<ConfigEntry.Category> typeSelectorButton = typeSelector.build();
 
         category.addEntry(typeSelectorButton);
 
 
         // Pressable action button
-        var actionButton = new PressableButtonEntry(new TranslatableText("blanket-client-tweaks.config.doBulkAction"), () -> {
+        PressableButtonEntry actionButton = new PressableButtonEntry(new TranslatableText("blanket-client-tweaks.config.doBulkAction"), () -> {
             if (typeSelectorButton.getError().isPresent()) return;
             action.action = actionSelectorButton.getValue();
             action.category = typeSelectorButton.getValue();
@@ -217,7 +313,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     }
 
-    private static enum ActionType {
+    private enum ActionType {
         ENABLE(b -> true),
         DISABLE(b -> false),
         TOGGLE(b -> !b),

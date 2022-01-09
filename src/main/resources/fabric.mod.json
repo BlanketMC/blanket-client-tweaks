@@ -19,9 +19,8 @@
 
   "environment": "client",
   "entrypoints": {
-    "main": [],
     "client": [
-      "io.github.blanketmc.blanket.FabricClientModInitializer"
+      "io.github.blanketmc.blanket.ClientFixes"
     ],
     "modmenu": [
       "io.github.blanketmc.blanket.config.BlanketConfigScreenProvider"
@@ -36,9 +35,6 @@
     "fabric": "*",
     "minecraft": "1.18.x",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   },
   "custom": {
     "modmenu": {

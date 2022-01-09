@@ -35,7 +35,14 @@ public @interface ConfigEntry {
      * Only the MC-??? part, never the https:
      * @return MC-????
      */
-    String issue() default "";
+    String[] issues() default {};
+
+
+    /**
+     * Allows you to add a listener to the config entry.
+     * @return Class<? extends ConfigEntryListener>
+     */
+    Class<? extends EntryListener>[] listeners() default {};
 
     /**
      * @return categories

@@ -24,7 +24,7 @@ public abstract class YggdrasilUserApiService_syncBlockListMixin {
     //Non-blocking API request.
     @Redirect(method = "isBlockedPlayer", at = @At(value = "INVOKE", target = "Lcom/mojang/authlib/yggdrasil/YggdrasilUserApiService;fetchBlockList()Ljava/util/Set;"))
     private Set<UUID> isBlockedPlayerFetchAsync(YggdrasilUserApiService instance) {
-        if (Config.config.fixChatLagFix) {
+        if (Config.chatLagFix) {
             CompletableFuture.runAsync(() -> this.blockList = fetchBlockList());
             return null;
         }
@@ -33,7 +33,7 @@ public abstract class YggdrasilUserApiService_syncBlockListMixin {
 
     @Redirect(method = "forceFetchBlockList", at = @At(value = "INVOKE", target = "Lcom/mojang/authlib/yggdrasil/response/BlockListResponse;getBlockedProfiles()Ljava/util/Set;"))
     private Set<UUID> forceFetchDontReturnNull(BlockListResponse instance) {
-        if (Config.config.fixChatLagFix) {
+        if (Config.chatLagFix) {
             Set<UUID> uuids = instance.getBlockedProfiles();
             return uuids == null ? new HashSet<>() : uuids;
         }

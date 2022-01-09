@@ -2,7 +2,7 @@ package io.github.blanketmc.blanket.config;
 
 import com.google.gson.*;
 import io.github.blanketmc.blanket.Config;
-import io.github.blanketmc.blanket.FabricClientModInitializer;
+import io.github.blanketmc.blanket.ClientFixes;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Field;
@@ -17,37 +17,43 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
     @Override
     public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject node = json.getAsJsonObject();
-        var config = new Config();
+        Config config = new Config();
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
 
             String entryName = configEntry.name().equals("") ? field.getName() : configEntry.name();
             if (node.has(entryName)) {
 
-                var configNode = node.get(entryName).getAsJsonObject();
+                JsonObject configNode = node.get(entryName).getAsJsonObject();
                 if (!configNode.has("value")) return;
 
 
-                var type = field.getType();
+                Class<?> type = field.getType();
 
                 if (type.equals(Boolean.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isBoolean()) return;
                     field.set(config, configNode.get("value").getAsBoolean());
-                }
-                else if (type.equals(Float.TYPE)) {
+                } else if (type.equals(Float.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
                     field.set(config, configNode.get("value").getAsFloat());
-                }
-                else if (type.isEnum()) {
+                } else if (type.equals(Double.TYPE)) {
+                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
+                    field.set(config, configNode.get("value").getAsDouble());
+                } else if (type.equals(Integer.TYPE)) {
+                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
+                    field.set(config, configNode.get("value").getAsInt());
+                } else if (type.equals(Long.TYPE)) {
+                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
+                    field.set(config, configNode.get("value").getAsLong());
+                } else if (type.isEnum()) {
                     if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
-                    //now, this is tricky
-                    try {
+                    try { //now, this is tricky
                         Method valueOf = type.getMethod("valueOf", String.class);
                         field.set(config, valueOf.invoke(null, configNode.get("value").getAsString()));
                     } catch(NoSuchMethodException | InvocationTargetException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    FabricClientModInitializer.log(Level.ERROR, "Config: " + field.getName() + " can not be imported: Unknown type", true);
+                    ClientFixes.log(Level.ERROR, "Config: " + field.getName() + " can not be imported: Unknown type", true);
                 }
             }
         });
@@ -75,9 +81,11 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
             node.addProperty("description", configEntry.description());
         }
 
-        if (!configEntry.issue().equals("")) {
-            node.addProperty("issue", mcIssuePrefix + configEntry.issue());
+        var issues = new JsonArray();
+        for (String issue : configEntry.issues()) {
+            issues.add(issue);
         }
+        node.add("issues", issues);
 
         var categories = new JsonArray();
         for (ConfigEntry.Category category : configEntry.categories()) {
@@ -90,11 +98,15 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
 
         if (type.equals(Boolean.TYPE)) {
             node.addProperty("value", (boolean)field.get(config));
-        }
-        if (type.equals(Float.TYPE)) {
+        } else if (type.equals(Float.TYPE)) {
             node.addProperty("value", (float)field.get(config));
-        }
-        if (type.isEnum()) {
+        } else if (type.equals(Double.TYPE)) {
+            node.addProperty("value", (double)field.get(config));
+        } else if (type.equals(Integer.TYPE)) {
+            node.addProperty("value", (int)field.get(config));
+        } else if (type.equals(Long.TYPE)) {
+            node.addProperty("value", (long)field.get(config));
+        } else if (type.isEnum()) {
             try {
                 Method toString = type.getMethod("toString");
                 node.addProperty("value", (String)toString.invoke(field.get(config)));
@@ -102,7 +114,6 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
                 e.printStackTrace();
             }
         }
-
         return node;
     }
 
@@ -121,7 +132,8 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
         "option 1" : {
             "name" : "The name of the first option",
             "description" : "some description",
-            "categories" : "GENERAL, BUGFIX, RECOMMENDED", //as literal text :D
+            "issues" : ["MC-1","MC-111"],
+            "categories" : ["GENERAL", "BUGFIX", "RECOMMENDED"],
             "value" : 42
          },
          ...

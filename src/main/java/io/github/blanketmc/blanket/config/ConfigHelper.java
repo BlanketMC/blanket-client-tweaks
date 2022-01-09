@@ -1,23 +1,43 @@
 package io.github.blanketmc.blanket.config;
 
 import io.github.blanketmc.blanket.Config;
-import io.github.blanketmc.blanket.FabricClientModInitializer;
+import io.github.blanketmc.blanket.ClientFixes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.Level;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class ConfigHelper {
+
+    public static int countActiveConfigOptions(Config config) {
+        int count = 0;
+        Config defaults = BlanketConfigScreenProvider.getDefaultsConfig();
+        Field[] fields = Config.class.getFields();
+        for (var field : fields) {
+            try {
+                ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
+                if (fieldInfo == null) continue; //this is not a config entry
+                if (field.getType().equals(Boolean.TYPE)) {
+                    if (field.getBoolean(config)) {
+                        count++;
+                    }
+                } else if (!(field.get(defaults).equals(field.get(config)))) { //If field is not equal to default
+                    count++;
+                }
+            } catch(IllegalAccessException ignored) {}
+        }
+        return count;
+    }
 
     public static void iterateOnConfig(ConfigIterator iterator){
         Field[] fields = Config.class.getFields();
@@ -52,7 +72,7 @@ public final class ConfigHelper {
             ConfigJsonSerializer.serializer.toJson(config, writer);
 
         } catch(IOException e){
-            FabricClientModInitializer.log(Level.ERROR, e.getMessage());
+            ClientFixes.log(Level.ERROR, e.getMessage());
         }
     }
 
@@ -71,10 +91,20 @@ public final class ConfigHelper {
             return ConfigJsonSerializer.serializer.fromJson(reader, Config.class);
 
         } catch(IOException e){
-            FabricClientModInitializer.log(Level.ERROR, e.getMessage());
+            ClientFixes.log(Level.ERROR, e.getMessage());
         }
 
         return new Config();
+    }
+
+    static <T> T callClassConstructor(Class<T> clazz) {
+        try {
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static interface ConfigIterator{
