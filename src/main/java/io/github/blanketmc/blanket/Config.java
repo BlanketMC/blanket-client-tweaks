@@ -18,17 +18,17 @@ public final class Config {
     @ConfigEntry(
             description = "Fix inventory can not be closed by mouse button.",
             issues = "MC-577",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, UI}
     )
-    public static boolean mouseCloseNotHandledFix = true;
+    public static boolean mouseCloseNotHandledFix = false;
 
     //by FX - PR0CESS
     @ConfigEntry(
             description = "Fix chat lag on multiplayer servers",
             issues = "MC-247973",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, PERFORMANCE}
     )
-    public static boolean chatLagFix = true;
+    public static boolean chatLagFix = false;
 
     //by FX - PR0CESS
     @ConfigEntry(
