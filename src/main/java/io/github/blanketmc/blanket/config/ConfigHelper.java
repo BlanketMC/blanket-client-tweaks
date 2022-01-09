@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Pair;
 import org.apache.logging.log4j.Level;
 
 import java.io.BufferedReader;
@@ -16,6 +17,9 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public final class ConfigHelper {
 
@@ -48,6 +52,31 @@ public final class ConfigHelper {
                 iterator.acceptConfigEntry(field, fieldInfo);
             } catch(IllegalAccessException ignored) {}
         }
+    }
+
+    public static List<Field> getConfigFieldsForCategory(ConfigEntry.Category category){
+        List<Field> entries = new ArrayList<>();
+        for (Field field : Config.class.getFields()) {
+            ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
+            if (fieldInfo == null) continue; //this is not a config entry
+            if (Arrays.asList(fieldInfo.categories()).contains(category)) {
+                entries.add(field);
+            }
+        }
+        return entries;
+    }
+
+    public static List<Pair<Field,ConfigEntry>> getConfigEntriesForCategory(ConfigEntry.Category category){
+        List<Pair<Field,ConfigEntry>> entries = new ArrayList<>();
+        Field[] fields = Config.class.getFields();
+        for (Field field : fields) {
+            ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
+            if (fieldInfo == null) continue; //this is not a config entry
+            if (Arrays.asList(fieldInfo.categories()).contains(category)) {
+                entries.add(new Pair<>(field, fieldInfo));
+            }
+        }
+        return entries;
     }
 
     public static MutableText getTextComponent(String str, String ifNull) {

@@ -4,6 +4,8 @@
   "package": "io.github.blanketmc.blanket.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "clientCommands.ClientPlayerEntity_clientCommandsMixin",
+    "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
     "Entity_clientDamageMixin",
     "Entity_lavaDamageMixin",
     "FireworkRocketEntity_particleMixin",

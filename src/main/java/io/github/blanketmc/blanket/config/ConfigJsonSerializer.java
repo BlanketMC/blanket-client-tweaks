@@ -12,7 +12,6 @@ import java.lang.reflect.Type;
 
 public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeserializer<Config> {
     public static final Gson serializer;
-    public static final String mcIssuePrefix = "https://bugs.mojang.com/projects/MC/issues/";
 
     @Override
     public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

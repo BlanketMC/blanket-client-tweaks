@@ -14,13 +14,14 @@ public class ClientFixes implements ClientModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LogManager.getLogger("blanket-client-tweaks");
 
+	public static final String mcIssuePrefix = "https://bugs.mojang.com/projects/MC/issues/";
+
 	public static Config config;
 
 	@Override
 	public void onInitializeClient() {
 
 		config = ConfigHelper.loadConfig();
-		//Config.config = ConfigHelper.loadConfig();
 
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
