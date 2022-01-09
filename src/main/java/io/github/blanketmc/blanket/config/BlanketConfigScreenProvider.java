@@ -25,10 +25,12 @@ import java.util.stream.Collectors;
 
 /**
  * Creates a cloth-config screen for mod configs
+ *
+ * USE THIS CLASS ONLY FOR MOD SCREEN
+ * Or the mod will crash if no ModMenu / Cloth Config is installed.
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes", "unused"})
 public class BlanketConfigScreenProvider implements ModMenuApi {
-    private static final Config defaults = new Config();
 
 
     @Override
@@ -36,13 +38,9 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         return parent -> getScreen(parent, ClientFixes.config);
     }
 
-    public static Config getDefaultsConfig() {
-        return defaults;
-    }
-
     public static Screen getScreen(Screen parent, Config config) {
         ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslatableText("blanket-client-tweaks.config.title"));
-        builder.setSavingRunnable(() -> ConfigHelper.saveConfig(config));
+        builder.setSavingRunnable(ConfigHelper::saveConfig);
 
         //Config entry category
         ConfigCategory general = builder.getOrCreateCategory(new TranslatableText("blanket-client-tweaks.config.general")); //we can ignore the title, until we have more categories
@@ -73,7 +71,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     }
                 });
 
-                entry.setDefaultValue(field.getBoolean(defaults)); //default value using mirror class
+                entry.setDefaultValue((boolean) ConfigHelper.getDefaultValue(field)); //default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.equals(Float.TYPE)) {
@@ -93,7 +91,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     }
                 });
 
-                entry.setDefaultValue(field.getFloat(defaults)); //default value using mirror class
+                entry.setDefaultValue((float) ConfigHelper.getDefaultValue(field)); //default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.equals(Double.TYPE)) {
@@ -112,7 +110,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                         e.printStackTrace();
                     }
                 });
-                entry.setDefaultValue(field.getDouble(defaults));//default value using mirror class
+                entry.setDefaultValue((double) ConfigHelper.getDefaultValue(field));//default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.equals(Integer.TYPE)) {
@@ -131,7 +129,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                         e.printStackTrace();
                     }
                 });
-                entry.setDefaultValue(field.getInt(defaults));//default value using mirror class
+                entry.setDefaultValue((int) ConfigHelper.getDefaultValue(field));//default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.equals(Long.TYPE)) {
@@ -150,7 +148,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                         e.printStackTrace();
                     }
                 });
-                entry.setDefaultValue(field.getLong(defaults));//default value using mirror class
+                entry.setDefaultValue((long) ConfigHelper.getDefaultValue(field));//default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.equals(String.class)) {
@@ -169,7 +167,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                         e.printStackTrace();
                     }
                 });
-                entry.setDefaultValue((String)field.get(defaults));//default value using mirror class
+                entry.setDefaultValue((String) ConfigHelper.getDefaultValue(field));//default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
             } else if (type.isEnum()) {
@@ -192,7 +190,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 });
 
                 //default value using mirror class
-                Object defVal = field.get(defaults);
+                Object defVal = ConfigHelper.getDefaultValue(field);
                 entry.setDefaultValue(clazz.cast(defVal));
 
                 //Description
@@ -245,7 +243,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
         return description;
     }
 
-    public static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
+    private static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
         ActionData action = new ActionData();
 
         // Action selector button
@@ -272,7 +270,7 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 }, anEnum -> new LiteralText(anEnum.toString())),
                 DropdownMenuBuilder.CellCreatorBuilder.of(category1 -> new LiteralText(category1.toString())));
 
-        typeSelector.setDefaultValue(ConfigEntry.Category.RECOMMENDED);
+        typeSelector.setDefaultValue(ConfigEntry.Category.ALL);
         typeSelector.setSelections(Arrays.stream(ConfigEntry.Category.values()).collect(Collectors.toSet()));
 
 
@@ -298,10 +296,11 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
             MinecraftClient.getInstance().setScreen(new ConfirmScreen(t -> {
                 if (t) {
                     ConfigHelper.iterateOnConfig((field, configEntry) -> {
-                        if (field.getType().equals(Boolean.TYPE) && Arrays.stream(field.getAnnotation(ConfigEntry.class).categories()).anyMatch(category12 -> category12 == action.category)) {
-                            field.set(config, action.action.apply(field.getBoolean(config)));
+                        if (field.getType().equals(Boolean.TYPE) && (action.category.equals(ConfigEntry.Category.ALL) || Arrays.stream(field.getAnnotation(ConfigEntry.class).categories()).anyMatch(category12 -> category12 == action.category))) {
+                            field.set(null, action.action.apply(field.getBoolean(config)));
                         }
                     });
+                    ConfigHelper.saveConfig();
                 }
                 MinecraftClient.getInstance().setScreen(getScreen(parent, config));
             }, new TranslatableText("blanket-client-tweaks.config.confirmTitle"), new TranslatableText(
@@ -350,6 +349,6 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     private static class ActionData {
         ActionType action = ActionType.ENABLE;
-        ConfigEntry.Category category = ConfigEntry.Category.RECOMMENDED;
+        ConfigEntry.Category category = ConfigEntry.Category.ALL;
     }
 }

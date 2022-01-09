@@ -6,8 +6,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class ClientFixes implements ClientModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -21,7 +19,7 @@ public class ClientFixes implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 
-		config = ConfigHelper.loadConfig();
+		ConfigHelper.loadConfig();
 
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 

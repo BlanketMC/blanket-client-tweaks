@@ -33,7 +33,7 @@ public class EnumArgumentType<T extends Enum<T>> implements ArgumentType<T>{
 
     @Override
     public T parse(final StringReader reader) throws CommandSyntaxException {
-        return Enum.valueOf(this.clazz, reader.readString());
+        return Enum.valueOf(this.clazz, reader.readString().toUpperCase());
     }
 
     public static <T extends Enum<T>> EnumArgumentType<T> enumeration(final Class<T> enumClass) {

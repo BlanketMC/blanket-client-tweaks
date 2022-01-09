@@ -1,13 +1,14 @@
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id "com.modrinth.minotaur" version "1.2.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
 group = project.maven_group
 
 repositories {
@@ -26,6 +27,10 @@ dependencies {
 
 	// Non Fabric dependencies
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+
+	include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 
@@ -71,6 +76,93 @@ jar {
 	}
 }
 
+
+//---------------- Publishing ----------------
+
+ext.ENV = System.getenv()
+
+ext.cfType = ENV.RELEASE_TYPE ? ENV.RELEASE_TYPE : "alpha"
+ext.isRelease = cfType == "release"
+ext.changes = ENV.CHANGELOG ? ENV.CHANGELOG.replaceAll("\\\\n", "\n") : ""
+ext.mod_version = project.mod_version
+
+
+if(!isRelease){
+	ext.mod_version = "${project.mod_version}-SNAPSHOT-${ ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : 'git rev-parse --verify --short HEAD'.execute().text.trim()}"
+}
+
+version = ext.mod_version
+
+ext.keysExists = ENV.CURSEFORGE_TOKEN != null;
+
+
+import com.modrinth.minotaur.TaskModrinthUpload
+import com.modrinth.minotaur.request.VersionType
+
+if(keysExists) {
+	println("Keys loaded, loading publish scripts")
+
+	project.ext.keys = new Properties()
+	project.ext.keys.curseforge_key = ENV.CURSEFORGE_TOKEN
+	project.ext.keys.modrinth_token = ENV.MODRINTH_TOKEN
+	project.ext.keys.kosmx_maven = ENV.KOSMX_TOKEN //KosmX's maven (maven.kosmx.dev)
+
+	task publishModrinth(type: TaskModrinthUpload) {
+		if (project.isRelease) {
+			versionType = VersionType.RELEASE
+		}
+		else {
+			versionType = VersionType.ALPHA
+		}
+		token = project.keys.modrinth_token;
+
+		projectId = "gxpkKtVH"
+		versionNumber = "${project.mod_version}"
+		versionName = "${project.mod_version}"
+		addGameVersion('1.18.1');
+		changelog = changes;
+		addLoader("fabric")
+		uploadFile = remapJar
+	}
+
+	curseforge {
+		apiKey = project.keys.curseforge_key
+		project {
+			id = '565968'
+			changelogType = "markdown"
+			changelog = changes
+			releaseType = project.cfType
+
+			addGameVersion "1.18.1"
+			addGameVersion "Fabric"
+
+			relations {
+				requiredDependency 'fabric-api'
+				requiredDependency 'modmenu'
+				embeddedLibrary 'cloth-config'
+			}
+
+			options {
+				forgeGradleIntegration = false // FABRIC MOD
+				javaVersionAutoDetect = false // defaults to true
+			}
+
+			mainArtifact(remapJar)
+			afterEvaluate {
+				uploadTask.dependsOn(remapJar)
+			}
+		}
+	}
+
+	task publishMod {
+		dependsOn(build)
+
+		finalizedBy(publish)
+		finalizedBy(tasks.curseforge)
+		finalizedBy(publishModrinth)
+	}
+}
+
 // configure the maven publication
 publishing {
 	publications {
@@ -81,9 +173,17 @@ publishing {
 
 	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+
+		if (project.keysExists) {
+			maven {
+				url = 'https://maven.kosmx.dev/'
+				credentials {
+					username = 'blanketGH'
+					password = project.keys.kosmx_maven
+				}
+			}
+		} else {
+			mavenLocal()
+		}
 	}
 }
