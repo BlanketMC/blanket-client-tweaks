@@ -23,7 +23,7 @@ public final class ConfigHelper {
         int count = 0;
         Config defaults = BlanketConfigScreenProvider.getDefaultsConfig();
         Field[] fields = Config.class.getFields();
-        for (var field : fields) {
+        for (Field field : fields) {
             try {
                 ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
                 if (fieldInfo == null) continue; //this is not a config entry
@@ -41,11 +41,10 @@ public final class ConfigHelper {
 
     public static void iterateOnConfig(ConfigIterator iterator){
         Field[] fields = Config.class.getFields();
-        for (var field : fields) {
+        for (Field field : fields) {
             try {
                 ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
                 if (fieldInfo == null) continue; //this is not a config entry
-
                 iterator.acceptConfigEntry(field, fieldInfo);
             } catch(IllegalAccessException ignored) {}
         }
@@ -97,7 +96,7 @@ public final class ConfigHelper {
         return new Config();
     }
 
-    static <T> T callClassConstructor(Class<T> clazz) {
+    public static <T> T callClassConstructor(Class<T> clazz) {
         try {
             Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);

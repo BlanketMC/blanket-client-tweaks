@@ -10,14 +10,14 @@ public final class Config {
     //by KosmX
     @ConfigEntry(
             description = "The only internal config. Toggle how much log should blanket create",
-            categories = {EXPERIMENTAL}
+            categories = EXPERIMENTAL
     )
     public static boolean extraLog = false;
 
     //by KosmX
     @ConfigEntry(
             description = "🛰️",
-            categories = {RECOMMENDED}
+            categories = RECOMMENDED
     )
     public static boolean superSecretOption = false;
 
@@ -55,7 +55,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix lava damaging entities client-side leading to de-sync",
             issues = "MC-246465",
-            categories = {BUGFIX,EXPERIMENTAL}
+            categories = {BUGFIX, EXPERIMENTAL}
     )
     public static boolean lavaDamageDesyncFix = false;
 
@@ -63,7 +63,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix client damaging items & experience orbs leading to de-sync",
             issues = "MC-53850",
-            categories = {BUGFIX,EXPERIMENTAL}
+            categories = {BUGFIX, EXPERIMENTAL}
     )
     public static boolean entityDamageDesyncFix = false;
 
@@ -71,7 +71,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix guardian beam not rendering due to world time being too high",
             issues = "MC-165595",
-            categories = {BUGFIX,RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED}
     )
     public static boolean guardianBeamRenderFix = true;
 
@@ -79,7 +79,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix firework particles flashing when flying straight up",
             issues = "MC-245937",
-            categories = {BUGFIX,RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED}
     )
     public static boolean flashingFireworkParticlesFix = true;
 

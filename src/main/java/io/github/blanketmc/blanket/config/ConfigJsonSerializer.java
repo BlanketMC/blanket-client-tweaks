@@ -44,6 +44,9 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
                 } else if (type.equals(Long.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
                     field.set(config, configNode.get("value").getAsLong());
+                } else if (type.equals(String.class)) {
+                    if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
+                    field.set(config, configNode.get("value").getAsString());
                 } else if (type.isEnum()) {
                     if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
                     try { //now, this is tricky

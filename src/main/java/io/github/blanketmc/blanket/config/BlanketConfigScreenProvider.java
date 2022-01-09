@@ -153,6 +153,25 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 entry.setDefaultValue(field.getLong(defaults));//default value using mirror class
                 entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
                 category.addEntry(entry.build());
+            } else if (type.equals(String.class)) {
+                TextFieldBuilder entry = entryBuilder.startTextField(ConfigHelper.getTextComponent(configEntry.displayName(), field.getName()), (String)field.get(config));
+
+                entry.setSaveConsumer(aString -> { //saveConsumer
+                    try {
+                        if (configEntry.listeners().length > 0) {
+                            String currentValue = (String)field.get(config);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aString = (String)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aString);
+                            }
+                        }
+                        field.set(config, aString);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                });
+                entry.setDefaultValue((String)field.get(defaults));//default value using mirror class
+                entry.setTooltip(fancyDescription(configEntry.description(), configEntry.categories(), configEntry.issues()));
+                category.addEntry(entry.build());
             } else if (type.isEnum()) {
                 Class<Enum<?>> clazz = (Class<Enum<?>>) type;
                 Object obj = field.get(config);
