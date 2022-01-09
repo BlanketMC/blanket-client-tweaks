@@ -179,7 +179,7 @@ publishing {
 				url = 'https://maven.kosmx.dev/'
 				credentials {
 					username = 'blanketGH'
-					password = 'project.keys.kosmx_maven'
+					password = project.keys.kosmx_maven
 				}
 			}
 		} else {
