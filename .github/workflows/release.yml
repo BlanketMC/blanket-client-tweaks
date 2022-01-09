@@ -46,6 +46,7 @@ jobs:
           CHANGELOG: ${{github.event.inputs.changelog}}
           CURSEFORGE_TOKEN: ${{secrets.CURSEFORGE}}
           MODRINTH_TOKEN: ${{secrets.MODRINTH}}
+          KOSMX_TOKEN: ${{secrets.KOSMX_TOKEN}}
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
         with:
