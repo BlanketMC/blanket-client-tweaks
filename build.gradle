@@ -156,11 +156,9 @@ if(keysExists) {
 
 	task publishMod {
 		dependsOn(build)
-		doLast {
 
-		}
 		finalizedBy(publish)
-		finalizedBy(finalizedBy(tasks.curseforge))
+		finalizedBy(tasks.curseforge)
 		finalizedBy(publishModrinth)
 	}
 }
@@ -177,18 +175,15 @@ publishing {
 	repositories {
 
 		if (project.keysExists) {
-			repositories {
-				maven {
-					uri 'https://maven.kosmx.dev/'
-					credentials {
-						username = 'blanketGH'
-						password = 'project.keys.kosmx_maven'
-					}
+			maven {
+				uri 'https://maven.kosmx.dev/'
+				credentials {
+					username = 'blanketGH'
+					password = 'project.keys.kosmx_maven'
 				}
 			}
 		} else {
 			mavenLocal()
 		}
-
 	}
 }
