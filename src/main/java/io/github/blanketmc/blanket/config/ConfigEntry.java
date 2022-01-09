@@ -69,6 +69,12 @@ public @interface ConfigEntry {
          * Experimental solution, be careful with these!
          */
         EXPERIMENTAL("EXPERIMENTAL"),
+  
+        /**
+         * This means that the fix/tweak only works in singleplayer
+         */
+        SINGLEPLAYER("SINGLEPLAYER"),
+
         /**
          * The fix/tweak is related to User Interface.
          */
