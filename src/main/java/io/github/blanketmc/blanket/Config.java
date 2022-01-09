@@ -83,6 +83,14 @@ public final class Config {
     )
     public static boolean flashingFireworkParticlesFix = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix entity id being shared by the client renderer and integrated server",
+            issues = "MC-238384",
+            categories = {BUGFIX, SINGLEPLAYER}
+    )
+    public static boolean sharedEntityIdFix = true;
+
     //not annotated to catch errors
     public static boolean theBlackSheep = true;
 

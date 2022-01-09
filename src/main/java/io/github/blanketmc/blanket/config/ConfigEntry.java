@@ -57,6 +57,7 @@ public @interface ConfigEntry {
         BUGFIX("BUGFIX"),
         TWEAK("TWEAK"),
         EXPERIMENTAL("EXPERIMENTAL"),
+        SINGLEPLAYER("SINGLEPLAYER")
         ;
         final String key;
 
