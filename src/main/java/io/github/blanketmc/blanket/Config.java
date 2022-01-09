@@ -12,34 +12,13 @@ public final class Config {
             description = "The only internal config. Toggle how much log should blanket create",
             categories = EXPERIMENTAL
     )
-    public static boolean extraLog = false;
-
-    //by KosmX
-    @ConfigEntry(
-            description = "🛰️",
-            categories = RECOMMENDED
-    )
-    public static boolean superSecretOption = false;
-
-    //by KosmX
-    @ConfigEntry(
-            description = "asd",
-            categories = {EXPERIMENTAL, TWEAK}
-    )
-    public static boolean anotherTestButton = false;
-
-    //by KosmX
-    @ConfigEntry(
-            description = "select a category",
-            categories = {EXPERIMENTAL, RECOMMENDED}
-    )
-    public static ConfigEntry.Category enumOption = RECOMMENDED;
+    public static boolean extraLog = true;
 
     //by KosmX
     @ConfigEntry(
             description = "Fix inventory can not be closed by mouse button.",
             issues = "MC-577",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, UI}
     )
     public static boolean mouseCloseNotHandledFix = true;
 
@@ -47,7 +26,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix chat lag on multiplayer servers",
             issues = "MC-247973",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, PERFORMANCE}
     )
     public static boolean chatLagFix = true;
 
@@ -83,8 +62,6 @@ public final class Config {
     )
     public static boolean flashingFireworkParticlesFix = true;
 
-    //not annotated to catch errors
-    public static boolean theBlackSheep = true;
 
 
     /*

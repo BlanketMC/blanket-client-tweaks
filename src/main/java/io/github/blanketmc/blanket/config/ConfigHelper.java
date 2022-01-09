@@ -14,28 +14,30 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public final class ConfigHelper {
 
+    private static final Map<Field, Object> defaults; //create in a static field
+
     public static int countActiveConfigOptions(Config config) {
         int count = 0;
-        Config defaults = BlanketConfigScreenProvider.getDefaultsConfig();
+
         Field[] fields = Config.class.getFields();
         for (Field field : fields) {
             try {
                 ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
                 if (fieldInfo == null) continue; //this is not a config entry
+                if (!Modifier.isStatic(field.getModifiers())) continue; //Every config entry must be static
                 if (field.getType().equals(Boolean.TYPE)) {
                     if (field.getBoolean(config)) {
                         count++;
                     }
-                } else if (!(field.get(defaults).equals(field.get(config)))) { //If field is not equal to default
+                } else if (!(getDefaultValue(field).equals(field.get(null)))) { //If field is not equal to default
                     count++;
                 }
             } catch(IllegalAccessException ignored) {}
@@ -59,7 +61,7 @@ public final class ConfigHelper {
         for (Field field : Config.class.getFields()) {
             ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
             if (fieldInfo == null) continue; //this is not a config entry
-            if (Arrays.asList(fieldInfo.categories()).contains(category)) {
+            if (category.equals(ConfigEntry.Category.ALL) || Arrays.asList(fieldInfo.categories()).contains(category)) {
                 entries.add(field);
             }
         }
@@ -91,38 +93,34 @@ public final class ConfigHelper {
         return new LiteralText(str);
     }
 
-    public static void saveConfig(Config config) {
+    public static void saveConfig() {
         Path toConfig = FabricLoader.getInstance().getConfigDir();
         toConfig = toConfig.resolve("blanket_client-fixes.json");
 
         try (BufferedWriter writer = Files.newBufferedWriter(toConfig, StandardCharsets.UTF_8)){
 
-            ConfigJsonSerializer.serializer.toJson(config, writer);
+            ConfigJsonSerializer.serializer.toJson(new Config(), writer); //make GSON find the correct TypeAdapter
 
         } catch(IOException e){
             ClientFixes.log(Level.ERROR, e.getMessage());
         }
     }
 
-    public static Config loadConfig() {
+    public static void loadConfig() {
         Path toConfig = FabricLoader.getInstance().getConfigDir();
         toConfig = toConfig.resolve("blanket_client-fixes.json");
 
         //Create a new config file, if there is no
         if (!toConfig.toFile().isFile()) {
-            Config config = new Config();
-            saveConfig(config);
-            return config;
+            saveConfig();
         }
         try (BufferedReader reader = Files.newBufferedReader(toConfig, StandardCharsets.UTF_8)){
 
-            return ConfigJsonSerializer.serializer.fromJson(reader, Config.class);
+            ConfigJsonSerializer.serializer.fromJson(reader, Config.class);
 
         } catch(IOException e){
             ClientFixes.log(Level.ERROR, e.getMessage());
         }
-
-        return new Config();
     }
 
     public static <T> T callClassConstructor(Class<T> clazz) {
@@ -135,7 +133,21 @@ public final class ConfigHelper {
         }
     }
 
-    public static interface ConfigIterator{
-        public void acceptConfigEntry(Field field, ConfigEntry configEntry) throws IllegalAccessException;
+    public static Object getDefaultValue(Field configField) {
+        ConfigEntry entry = configField.getAnnotation(ConfigEntry.class);
+        if (entry == null) throw new IllegalArgumentException(configField + " is not a config entry");
+
+        return defaults.get(configField);
+    }
+
+    static {
+        defaults = new HashMap<>();
+        iterateOnConfig((field, configEntry) -> {
+            defaults.put(field, field.get(null));
+        });
+    }
+
+    public interface ConfigIterator{
+        void acceptConfigEntry(Field field, ConfigEntry configEntry) throws IllegalAccessException;
     }
 }

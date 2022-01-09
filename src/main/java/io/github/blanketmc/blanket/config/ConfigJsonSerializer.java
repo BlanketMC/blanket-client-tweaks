@@ -16,7 +16,6 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
     @Override
     public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject node = json.getAsJsonObject();
-        Config config = new Config();
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
 
             String entryName = configEntry.name().equals("") ? field.getName() : configEntry.name();
@@ -30,27 +29,27 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
 
                 if (type.equals(Boolean.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isBoolean()) return;
-                    field.set(config, configNode.get("value").getAsBoolean());
+                    field.set(null, configNode.get("value").getAsBoolean());
                 } else if (type.equals(Float.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(config, configNode.get("value").getAsFloat());
+                    field.set(null, configNode.get("value").getAsFloat());
                 } else if (type.equals(Double.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(config, configNode.get("value").getAsDouble());
+                    field.set(null, configNode.get("value").getAsDouble());
                 } else if (type.equals(Integer.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(config, configNode.get("value").getAsInt());
+                    field.set(null, configNode.get("value").getAsInt());
                 } else if (type.equals(Long.TYPE)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(config, configNode.get("value").getAsLong());
+                    field.set(null, configNode.get("value").getAsLong());
                 } else if (type.equals(String.class)) {
                     if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
-                    field.set(config, configNode.get("value").getAsString());
+                    field.set(null, configNode.get("value").getAsString());
                 } else if (type.isEnum()) {
                     if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
                     try { //now, this is tricky
                         Method valueOf = type.getMethod("valueOf", String.class);
-                        field.set(config, valueOf.invoke(null, configNode.get("value").getAsString()));
+                        field.set(null, valueOf.invoke(null, configNode.get("value").getAsString()));
                     } catch(NoSuchMethodException | InvocationTargetException e) {
                         e.printStackTrace();
                     }
@@ -59,12 +58,16 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
                 }
             }
         });
-        return config;
+        return new Config();
     }
 
     @Override
     public JsonElement serialize(Config src, Type typeOfSrc, JsonSerializationContext context) {
         var node = new JsonObject();
+
+        node.addProperty("aboutConfig", "Blanket config: The mod only cares about the *value* property, you can edit, delete the others.");
+        node.addProperty("aboutConfig2", "But if you save the config from the mod, it will override this file.");
+        node.addProperty("aboutConfig3", "Good luck!");
 
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
             node.add(configEntry.name().equals("") ? field.getName() : configEntry.name(), writeField(src, field, configEntry));
@@ -72,7 +75,7 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
         return node;
     }
 
-    public JsonElement writeField(Config config, Field field, ConfigEntry configEntry) throws IllegalAccessException {
+    public JsonElement writeField(Config ignored, Field field, ConfigEntry configEntry) throws IllegalAccessException {
         var node = new JsonObject();
 
         if (!configEntry.displayName().equals("")) {
@@ -99,19 +102,19 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
         Class<?> type = field.getType();
 
         if (type.equals(Boolean.TYPE)) {
-            node.addProperty("value", (boolean)field.get(config));
+            node.addProperty("value", (boolean)field.get(null));
         } else if (type.equals(Float.TYPE)) {
-            node.addProperty("value", (float)field.get(config));
+            node.addProperty("value", (float)field.get(null));
         } else if (type.equals(Double.TYPE)) {
-            node.addProperty("value", (double)field.get(config));
+            node.addProperty("value", (double)field.get(null));
         } else if (type.equals(Integer.TYPE)) {
-            node.addProperty("value", (int)field.get(config));
+            node.addProperty("value", (int)field.get(null));
         } else if (type.equals(Long.TYPE)) {
-            node.addProperty("value", (long)field.get(config));
+            node.addProperty("value", (long)field.get(null));
         } else if (type.isEnum()) {
             try {
                 Method toString = type.getMethod("toString");
-                node.addProperty("value", (String)toString.invoke(field.get(config)));
+                node.addProperty("value", (String)toString.invoke(field.get(null)));
             } catch(NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
