@@ -6,7 +6,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import io.github.blanketmc.blanket.ClientFixes;
-import io.github.blanketmc.blanket.config.BlanketConfigScreenProvider;
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
 import io.github.blanketmc.blanket.config.EntryListener;
