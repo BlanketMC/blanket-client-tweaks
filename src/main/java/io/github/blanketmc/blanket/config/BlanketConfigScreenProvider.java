@@ -345,6 +345,6 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
 
     private static class ActionData {
         ActionType action = ActionType.ENABLE;
-        ConfigEntry.Category category = ConfigEntry.Category.RECOMMENDED;
+        ConfigEntry.Category category = ConfigEntry.Category.ALL;
     }
 }
