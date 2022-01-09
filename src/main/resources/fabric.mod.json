@@ -7,7 +7,7 @@
   "description": "Fixing annoying features while trying to stay VANILLA!",
   "authors": [
     "KosmX",
-    "Fx Morin"
+    "FX - PR0CESS"
   ],
   "contact": {
     "homepage": "https://github.com/BlanketMC/blanket-client-tweaks",
@@ -19,6 +19,9 @@
 
   "environment": "client",
   "entrypoints": {
+    "preLaunch": [
+      "io.github.blanketmc.blanket.ClientFixesPreLaunch"
+    ],
     "client": [
       "io.github.blanketmc.blanket.ClientFixes"
     ],
