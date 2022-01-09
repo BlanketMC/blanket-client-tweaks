@@ -19,6 +19,9 @@
 
   "environment": "client",
   "entrypoints": {
+    "preLaunch": [
+      "io.github.blanketmc.blanket.ClientFixesPreLaunch"
+    ],
     "client": [
       "io.github.blanketmc.blanket.ClientFixes"
     ],
