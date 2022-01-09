@@ -126,28 +126,31 @@ if(keysExists) {
 	}
 
 	curseforge {
-		id = '565968'
-		changelogType = "markdown"
-		changelog = changes
-		releaseType = project.cfType
+		apiKey = project.keys.curseforge_key
+		project {
+			id = '565968'
+			changelogType = "markdown"
+			changelog = changes
+			releaseType = project.cfType
 
-		addGameVersion "1.18.1"
-		addGameVersion "Fabric"
+			addGameVersion "1.18.1"
+			addGameVersion "Fabric"
 
-		relations {
-			requiredDependency 'fabric-api'
-			requiredDependency 'modmenu'
-			embeddedLibrary 'cloth-config'
-		}
+			relations {
+				requiredDependency 'fabric-api'
+				requiredDependency 'modmenu'
+				embeddedLibrary 'cloth-config'
+			}
 
-		options {
-			forgeGradleIntegration = false // FABRIC MOD
-			javaVersionAutoDetect = false // defaults to true
-		}
+			options {
+				forgeGradleIntegration = false // FABRIC MOD
+				javaVersionAutoDetect = false // defaults to true
+			}
 
-		afterEvaluate {
-			mainArtifact(remapJar.output)
-			uploadTask.dependsOn(remapJar)
+			afterEvaluate {
+				mainArtifact(remapJar.output)
+				uploadTask.dependsOn(remapJar)
+			}
 		}
 	}
 
