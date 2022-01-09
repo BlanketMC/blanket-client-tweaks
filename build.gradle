@@ -95,6 +95,10 @@ version = ext.mod_version
 
 ext.keysExists = ENV.CURSEFORGE_TOKEN != null;
 
+
+import com.modrinth.minotaur.TaskModrinthUpload
+import com.modrinth.minotaur.request.VersionType
+
 if(keysExists) {
 	println("Keys loaded, loading publish scripts")
 
