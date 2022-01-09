@@ -61,7 +61,7 @@ public final class ConfigHelper {
         for (Field field : Config.class.getFields()) {
             ConfigEntry fieldInfo = field.getAnnotation(ConfigEntry.class);
             if (fieldInfo == null) continue; //this is not a config entry
-            if (Arrays.asList(fieldInfo.categories()).contains(category)) {
+            if (category.equals(ConfigEntry.Category.ALL) || Arrays.asList(fieldInfo.categories()).contains(category)) {
                 entries.add(field);
             }
         }
