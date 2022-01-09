@@ -53,3 +53,6 @@ Detail a description.
 The mixin class should be named : `"${MixinTargetClassName}_${Fix/Tweak name}Mixin"`  
 If you need a helper class, put it in `fixes` package with the fix name.  
 If multiple helpers are needed, create a package in `fixes` and put classes there.
+
+## Any change
+If the change is not a one-line fix, create a branch and do a PR.  
