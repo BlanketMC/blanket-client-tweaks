@@ -294,9 +294,10 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                 if (t) {
                     ConfigHelper.iterateOnConfig((field, configEntry) -> {
                         if (field.getType().equals(Boolean.TYPE) && (action.category.equals(ConfigEntry.Category.ALL) || Arrays.stream(field.getAnnotation(ConfigEntry.class).categories()).anyMatch(category12 -> category12 == action.category))) {
-                            field.set(config, action.action.apply(field.getBoolean(config)));
+                            field.set(null, action.action.apply(field.getBoolean(config)));
                         }
                     });
+                    ConfigHelper.saveConfig();
                 }
                 MinecraftClient.getInstance().setScreen(getScreen(parent, config));
             }, new TranslatableText("blanket-client-tweaks.config.confirmTitle"), new TranslatableText(
