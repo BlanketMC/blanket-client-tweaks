@@ -147,8 +147,8 @@ if(keysExists) {
 				javaVersionAutoDetect = false // defaults to true
 			}
 
+			mainArtifact(remapJar)
 			afterEvaluate {
-				mainArtifact(remapJar.output)
 				uploadTask.dependsOn(remapJar)
 			}
 		}
@@ -179,7 +179,7 @@ publishing {
 		if (project.keysExists) {
 			repositories {
 				maven {
-					uri = 'https://maven.kosmx.dev/'
+					uri 'https://maven.kosmx.dev/'
 					credentials {
 						username = 'blanketGH'
 						password = 'project.keys.kosmx_maven'
