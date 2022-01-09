@@ -74,9 +74,14 @@ public @interface ConfigEntry {
          */
         UI("UI"),
         /**
-         * The fix/tweak can be considered as a performance fix
+         * The fix/tweak can be considered as a performance fix.
          */
-        PERFORMANCE("PERFORMANCE")
+        PERFORMANCE("PERFORMANCE"),
+
+        /**
+         * All config, just a tool for bulk-actions.
+         */
+        ALL("ALL"),
         ;
         final String key;
 
