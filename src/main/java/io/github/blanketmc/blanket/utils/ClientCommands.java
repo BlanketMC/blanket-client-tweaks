@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static io.github.blanketmc.blanket.ClientFixes.config;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ClientCommands {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -199,7 +200,7 @@ public class ClientCommands {
             boolean value = field.getBoolean(config);
             description.append(new LiteralText(value ? "§2True" : "§4False"));
         } else {
-            boolean isDefault = field.get(config).equals(field.get(BlanketConfigScreenProvider.getDefaultsConfig()));
+            boolean isDefault = field.get(config).equals(ConfigHelper.getDefaultValue(field));
             description.append(new LiteralText((isDefault ? "§2" : "§b")+field.get(config).toString()));
         }
         return description;
