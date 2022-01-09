@@ -12,7 +12,7 @@ public final class Config {
             description = "The only internal config. Toggle how much log should blanket create",
             categories = EXPERIMENTAL
     )
-    public static boolean extraLog = false;
+    public static boolean extraLog = true;
 
     //by KosmX
     @ConfigEntry(
@@ -20,7 +20,7 @@ public final class Config {
             issues = "MC-577",
             categories = {BUGFIX, RECOMMENDED, UI}
     )
-    public static boolean mouseCloseNotHandledFix = false;
+    public static boolean mouseCloseNotHandledFix = true;
 
     //by FX - PR0CESS
     @ConfigEntry(
@@ -28,7 +28,7 @@ public final class Config {
             issues = "MC-247973",
             categories = {BUGFIX, RECOMMENDED, PERFORMANCE}
     )
-    public static boolean chatLagFix = false;
+    public static boolean chatLagFix = true;
 
     //by FX - PR0CESS
     @ConfigEntry(

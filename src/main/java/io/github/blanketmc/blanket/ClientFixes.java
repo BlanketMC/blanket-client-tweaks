@@ -21,7 +21,7 @@ public class ClientFixes implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 
-		config = ConfigHelper.loadConfig();
+		ConfigHelper.loadConfig();
 
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
