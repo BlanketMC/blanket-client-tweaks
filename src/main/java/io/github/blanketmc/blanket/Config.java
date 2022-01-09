@@ -75,6 +75,14 @@ public final class Config {
     )
     public static boolean guardianBeamRenderFix = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix firework particles flashing when flying straight up",
+            issues = "MC-245937",
+            categories = {BUGFIX,RECOMMENDED}
+    )
+    public static boolean flashingFireworkParticlesFix = true;
+
     //not annotated to catch errors
     public static boolean theBlackSheep = true;
 
