@@ -70,6 +70,13 @@ public final class Config {
     )
     public static boolean sharedEntityIdFix = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Optimized the getBiome call to be 25% - 75% faster",
+            categories = {PERFORMANCE, RECOMMENDED}
+    )
+    public static boolean optimizedBiomeAccess = true;
+
 
     /*
 
