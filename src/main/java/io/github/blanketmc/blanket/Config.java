@@ -16,27 +16,6 @@ public final class Config {
 
     //by KosmX
     @ConfigEntry(
-            description = "🛰️",
-            categories = RECOMMENDED
-    )
-    public static boolean superSecretOption = false;
-
-    //by KosmX
-    @ConfigEntry(
-            description = "asd",
-            categories = {EXPERIMENTAL, TWEAK}
-    )
-    public static boolean anotherTestButton = false;
-
-    //by KosmX
-    @ConfigEntry(
-            description = "select a category",
-            categories = {EXPERIMENTAL, RECOMMENDED}
-    )
-    public static ConfigEntry.Category enumOption = RECOMMENDED;
-
-    //by KosmX
-    @ConfigEntry(
             description = "Fix inventory can not be closed by mouse button.",
             issues = "MC-577",
             categories = {BUGFIX, RECOMMENDED}
@@ -83,8 +62,6 @@ public final class Config {
     )
     public static boolean flashingFireworkParticlesFix = true;
 
-    //not annotated to catch errors
-    public static boolean theBlackSheep = true;
 
 
     /*
