@@ -52,22 +52,36 @@ public @interface ConfigEntry {
     /**
      * Enum to describe config entry types
      */
-    public static enum Category {
+    enum Category {
+        /**
+         * Recommended config, defaults to ON.
+         */
         RECOMMENDED("RECOMMENDED"),
+        /**
+         * Fixes a bug in Minecraft.
+         */
         BUGFIX("BUGFIX"),
+        /**
+         * A Client-tweak, not a bugfix. Still can be very useful.
+         */
         TWEAK("TWEAK"),
+        /**
+         * Experimental solution, be careful with these!
+         */
         EXPERIMENTAL("EXPERIMENTAL"),
+        /**
+         * The fix/tweak is related to User Interface.
+         */
+        UI("UI"),
+        /**
+         * The fix/tweak can be considered as a performance fix
+         */
+        PERFORMANCE("PERFORMANCE")
         ;
         final String key;
 
         Category(String string) {
             this.key = string;
         }
-        /*
-        public String getKey() {
-            return key;
-        }
-
-         */
     }
 }
