@@ -176,7 +176,7 @@ publishing {
 
 		if (project.keysExists) {
 			maven {
-				uri 'https://maven.kosmx.dev/'
+				url = 'https://maven.kosmx.dev/'
 				credentials {
 					username = 'blanketGH'
 					password = 'project.keys.kosmx_maven'
