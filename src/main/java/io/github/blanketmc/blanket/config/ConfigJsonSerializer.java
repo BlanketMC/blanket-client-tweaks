@@ -65,7 +65,7 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
     public JsonElement serialize(Config src, Type typeOfSrc, JsonSerializationContext context) {
         var node = new JsonObject();
 
-        node.addProperty("aboutConfig", "Blanket config: The mod only cares about the 'var' property, you can edit, delete the others.");
+        node.addProperty("aboutConfig", "Blanket config: The mod only cares about the *value* property, you can edit, delete the others.");
         node.addProperty("aboutConfig2", "But if you save the config from the mod, it will override this file.");
         node.addProperty("aboutConfig3", "Good luck!");
 
