@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -71,8 +72,68 @@ jar {
 	}
 }
 
+
+//---------------- Publishing ----------------
+
+ext.ENV = System.getenv()
+
+ext.cfType = ENV.RELEASE_TYPE ? ENV.RELEASE_TYPE : "alpha"
+ext.isRelease = cfType == "release"
+ext.changes = ENV.CHANGELOG ? ENV.CHANGELOG.replaceAll("\\\\n", "\n") : ""
+ext.mod_version = project.version
+
+
+if(!isRelease){
+	ext.mod_version = "${project.version}-SNAPSHOT-${ ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : 'git rev-parse --verify --short HEAD'.execute().text.trim()}"
+}
+
+ext.keysExists = ENV.CURSEFORGE_TOKEN != null;
+
+if(keysExists) {
+
+	project.ext.keys.curseforge_key = ENV.CURSEFORGE_TOKEN
+	project.ext.keys.kosmx_maven = ENV.KOSMX_TOKEN //KosmX's maven (maven.kosmx.dev)
+
+	curseforge {
+		id = '565968'
+		changelogType = "markdown"
+		changelog = changes
+		releaseType = project.cfType
+
+		addGameVersion "1.18.1"
+		addGameVersion "Fabric"
+
+		relations {
+			requiredDependency 'fabric-api'
+			requiredDependency 'modmenu'
+			requiredDependency 'cloth-config'
+		}
+
+		options {
+			forgeGradleIntegration = false // FABRIC MOD
+			javaVersionAutoDetect = false // defaults to true
+		}
+
+		afterEvaluate {
+			mainArtifact(remapJar.output)
+			uploadTask.dependsOn(remapJar)
+		}
+	}
+
+	task publishMod {
+		dependsOn(build)
+		doLast {
+
+		}
+		finalizedBy(finalizedBy(tasks.curseforge))
+		finalizedBy(publish)
+	}
+}
+
 // configure the maven publication
 publishing {
+	println("Keys loaded, loading publish scripts")
+
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
@@ -81,9 +142,20 @@ publishing {
 
 	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+
+		if (project.keysExists) {
+			repositories {
+				maven {
+					uri = 'https://maven.kosmx.dev/'
+					credentials {
+						username = 'blanketGH'
+						password = 'project.keys.kosmx_maven'
+					}
+				}
+			}
+		} else {
+			mavenLocal()
+		}
+
 	}
 }
