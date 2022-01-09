@@ -2,6 +2,8 @@ package io.github.blanketmc.blanket;
 
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
+import io.github.blanketmc.blanket.config.EntryListener;
+import io.github.blanketmc.blanket.utils.LockMinecartView;
 
 import static io.github.blanketmc.blanket.config.ConfigEntry.Category.*;
 
@@ -70,10 +72,26 @@ public final class Config {
     )
     public static boolean sharedEntityIdFix = true;
 
+    //by KosmX
+    @ConfigEntry(
+            description = "Locks the players view when using riding a minecart",
+            listeners = lockMinecartViewListener.class,
+            categories = {TWEAK}
+    )
+    public static boolean lockMinecartView = true;
+
 
     /*
 
     Entry Listeners
 
      */
+
+    private static class lockMinecartViewListener extends EntryListener<Boolean> {
+        @Override
+        public Boolean onEntryChange(Boolean currentValue, Boolean newValue) {
+            if (newValue) LockMinecartView.onStartRiding();
+            return newValue;
+        }
+    }
 }

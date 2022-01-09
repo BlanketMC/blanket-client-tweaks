@@ -4,6 +4,7 @@
   "package": "io.github.blanketmc.blanket.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "clientPlayer_lockViewMixin",
     "Entity_clientDamageMixin",
     "Entity_lavaDamageMixin",
     "Entity_localIdMixin",
