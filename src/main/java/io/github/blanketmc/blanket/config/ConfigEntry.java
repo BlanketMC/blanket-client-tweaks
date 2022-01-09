@@ -73,7 +73,7 @@ public @interface ConfigEntry {
         /**
          * This means that the fix/tweak only works in singleplayer
          */
-        SINGLEPLAYER("SINGLEPLAYER")
+        SINGLEPLAYER("SINGLEPLAYER"),
 
         /**
          * The fix/tweak is related to User Interface.
