@@ -67,6 +67,21 @@ public final class Config {
     )
     public static boolean entityDamageDesyncFix = false;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix guardian beam not rendering due to world time being too high",
+            issues = "MC-165595",
+            categories = {BUGFIX,RECOMMENDED}
+    )
+    public static boolean guardianBeamRenderFix = true;
+
     //not annotated to catch errors
     public static boolean theBlackSheep = true;
+
+
+    /*
+
+    Entry Listeners
+
+     */
 }

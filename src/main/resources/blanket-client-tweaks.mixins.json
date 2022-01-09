@@ -6,6 +6,7 @@
   "client": [
     "Entity_clientDamageMixin",
     "Entity_lavaDamageMixin",
+    "GuardianEntityRenderer_beamMixin",
     "HandledScreen_mouseCloseMixin",
     "YggdrasilUserApiService_syncBlockListMixin"
   ],
