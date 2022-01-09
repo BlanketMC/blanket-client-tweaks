@@ -63,8 +63,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Boolean currentValue = field.getBoolean(config);
-                            for (Class<? extends EntryListener<Boolean>> listener : configEntry.listeners()) {
-                                aBoolean = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aBoolean);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aBoolean = (Boolean) (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aBoolean);
                             }
                         }
                         field.set(config, aBoolean);
@@ -83,8 +83,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Float currentValue = field.getFloat(config);
-                            for (Class<? extends EntryListener<Float>> listener : configEntry.listeners()) {
-                                aFloat = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aFloat);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aFloat = (Float)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aFloat);
                             }
                         }
                         field.set(config, aFloat);
@@ -103,8 +103,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Double currentValue = field.getDouble(config);
-                            for (Class<? extends EntryListener<Double>> listener : configEntry.listeners()) {
-                                aDouble = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aDouble);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aDouble = (Double)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aDouble);
                             }
                         }
                         field.set(config, aDouble);
@@ -122,8 +122,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Integer currentValue = field.getInt(config);
-                            for (Class<? extends EntryListener<Integer>> listener : configEntry.listeners()) {
-                                aInt = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aInt);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aInt = (Integer)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aInt);
                             }
                         }
                         field.set(config, aInt);
@@ -141,8 +141,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Long currentValue = field.getLong(config);
-                            for (Class<? extends EntryListener<Long>> listener : configEntry.listeners()) {
-                                aLong = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aLong);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                aLong = (Long)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, aLong);
                             }
                         }
                         field.set(config, aLong);
@@ -162,8 +162,8 @@ public class BlanketConfigScreenProvider implements ModMenuApi {
                     try {
                         if (configEntry.listeners().length > 0) {
                             Enum<?> currentValue = clazz.cast(field.get(config));
-                            for (Class<? extends EntryListener<Enum<?>>> listener : configEntry.listeners()) {
-                                anEnum = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, anEnum);
+                            for (Class<? extends EntryListener> listener : configEntry.listeners()) {
+                                anEnum = (Enum<?>)(ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, anEnum);
                             }
                         }
                         field.set(config, anEnum);
