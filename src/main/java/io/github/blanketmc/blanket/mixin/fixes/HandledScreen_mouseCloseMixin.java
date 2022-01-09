@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.mixin;
+package io.github.blanketmc.blanket.mixin.fixes;
 
 import io.github.blanketmc.blanket.Config;
 import net.minecraft.client.MinecraftClient;

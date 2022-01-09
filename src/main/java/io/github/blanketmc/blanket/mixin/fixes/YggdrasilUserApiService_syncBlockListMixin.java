@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.mixin;
+package io.github.blanketmc.blanket.mixin.fixes;
 
 import com.mojang.authlib.yggdrasil.YggdrasilUserApiService;
 import com.mojang.authlib.yggdrasil.response.BlockListResponse;
