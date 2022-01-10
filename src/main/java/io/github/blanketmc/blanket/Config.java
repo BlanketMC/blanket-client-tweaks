@@ -77,6 +77,14 @@ public final class Config {
     )
     public static boolean optimizedBiomeAccess = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix wolf tail spinning if health is increased",
+            issues = "MC-175622",
+            categories = {BUGFIX, RENDER}
+    )
+    public static boolean wolfTailSpinFix = true;
+
 
     /*
 
