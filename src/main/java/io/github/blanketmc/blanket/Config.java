@@ -50,7 +50,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix guardian beam not rendering due to world time being too high",
             issues = "MC-165595",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean guardianBeamRenderFix = true;
 
@@ -58,7 +58,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix firework particles flashing when flying straight up",
             issues = "MC-245937",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean flashingFireworkParticlesFix = true;
 
