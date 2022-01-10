@@ -12,6 +12,7 @@
     "fixes.FireworkRocketEntity_particleMixin",
     "fixes.GuardianEntityRenderer_beamMixin",
     "fixes.HandledScreen_mouseCloseMixin",
+    "fixes.WolfEntity_tailSpinMixin",
     "fixes.YggdrasilUserApiService_syncBlockListMixin",
     "performance.BiomeAccess_predictionMixin"
   ],
