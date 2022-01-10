@@ -80,6 +80,11 @@ public @interface ConfigEntry {
         SINGLEPLAYER("SINGLEPLAYER"),
 
         /**
+         * The fix/tweak is related to Rendering.
+         */
+        RENDER("RENDER"),
+
+        /**
          * The fix/tweak is related to User Interface.
          */
         UI("UI"),

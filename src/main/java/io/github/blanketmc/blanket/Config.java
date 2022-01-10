@@ -50,7 +50,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix guardian beam not rendering due to world time being too high",
             issues = "MC-165595",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean guardianBeamRenderFix = true;
 
@@ -58,7 +58,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix firework particles flashing when flying straight up",
             issues = "MC-245937",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean flashingFireworkParticlesFix = true;
 
@@ -69,6 +69,21 @@ public final class Config {
             categories = {BUGFIX, SINGLEPLAYER}
     )
     public static boolean sharedEntityIdFix = true;
+
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Optimized the getBiome call to be 25% - 75% faster",
+            categories = {PERFORMANCE, RECOMMENDED}
+    )
+    public static boolean optimizedBiomeAccess = true;
+
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix wolf tail spinning if health is increased",
+            issues = "MC-175622",
+            categories = {BUGFIX, RENDER}
+    )
+    public static boolean wolfTailSpinFix = true;
 
 
     /*
