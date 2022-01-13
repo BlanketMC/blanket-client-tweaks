@@ -2,6 +2,7 @@ package io.github.blanketmc.blanket.config;
 
 import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.ClientFixes;
+import io.github.blanketmc.blanket.config.screen.ScreenHelper;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
  * Or the mod will crash if no ModMenu / Cloth Config is installed.
  */
 @SuppressWarnings({"unchecked", "rawtypes", "unused"})
+@Deprecated
 public class ClothConfigScreenBuilder {
 
     public static Screen getScreen(Screen parent, Config config) {
@@ -197,42 +199,7 @@ public class ClothConfigScreenBuilder {
     }
 
     private static Text fancyDescription(String desc, ConfigEntry.Category[] categories, String[] issues) {
-        MutableText description = new LiteralText("");
-        if (!desc.equals("")) {
-            description = ConfigHelper.getTextComponent(desc, null);
-
-            description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n"));
-
-            if (issues.length == 0) description.append(new LiteralText("\n"));
-        }
-
-        if (issues.length > 0) {
-            description.append(new LiteralText("Fixes:\n").formatted(Formatting.DARK_PURPLE));
-
-            Iterator<String> iterator = Arrays.stream(issues).iterator();
-            while (iterator.hasNext()) {
-                String issue = iterator.next();
-                description.append(new LiteralText(issue).formatted(Formatting.DARK_AQUA));
-                if (iterator.hasNext()) {
-                    description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
-                }
-            }
-            description.append("\n\n");
-        }
-
-        description.append(new LiteralText("Categories:\n").formatted(Formatting.LIGHT_PURPLE));
-
-        Iterator<ConfigEntry.Category> iterator = Arrays.stream(categories).iterator();
-        while (iterator.hasNext()) {
-
-            ConfigEntry.Category category = iterator.next();
-            description.append(new LiteralText(category.toString()).formatted(Formatting.BLUE));
-
-            if (iterator.hasNext()) {
-                description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
-            }
-        }
-        return description;
+        return ScreenHelper.fancyDescription(desc, categories, issues);
     }
 
     private static void addBulkModeCategory(ConfigCategory category, ConfigEntryBuilder entryBuilder, Config config, Screen parent) {
