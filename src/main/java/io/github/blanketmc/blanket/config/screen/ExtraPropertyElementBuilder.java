@@ -1,0 +1,29 @@
+package io.github.blanketmc.blanket.config.screen;
+
+import io.github.blanketmc.blanket.config.ConfigHelper;
+import io.github.blanketmc.blanket.config.ExtraProperty;
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
+import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
+import net.minecraft.text.Text;
+
+import java.lang.reflect.Field;
+
+public class ExtraPropertyElementBuilder extends AbstractConfigElementBuilder {
+    private final ExtraProperty extraProperty;
+
+    public ExtraPropertyElementBuilder(Field field) {
+        super(field);
+        if (!field.isAnnotationPresent(ExtraProperty.class)) throw new IllegalArgumentException(field + " is not an extra property entry");
+        this.extraProperty = field.getAnnotation(ExtraProperty.class);
+    }
+
+    @Override
+    protected Text getTooltip() {
+        return ConfigHelper.getTextComponent(extraProperty.description(), "");
+    }
+
+    @Override
+    protected Text getText() {
+        return ConfigHelper.getTextComponent(extraProperty.name(), configField.getName());
+    }
+}
