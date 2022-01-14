@@ -1,5 +1,6 @@
 package io.github.blanketmc.blanket.config.screen;
 
+import com.google.common.collect.Lists;
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
 import io.github.blanketmc.blanket.config.screen.util.ScreenHelper;
@@ -8,9 +9,13 @@ import io.github.blanketmc.blanket.config.screen.widget.FirstElementAlwaysDispla
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
+import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -38,6 +43,10 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     private Function<ConfigEntry.Category[], Boolean> categoryFilter = field -> true;
 
     private int sortOrder = 0;
+    private List<Drawable> drawables = new ArrayList<>();
+
+    private ButtonWidget saveButton;
+    private ButtonWidget quitButton;
 
     public ConfigSearchScreen(Screen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
@@ -53,24 +62,78 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
 
     @Override
     protected void init() {
+        drawables = new ArrayList<>();
         super.init();
 
-        entryList = new BlanketConfigEntryList(this, client, this.width, this.height - 40, 20,this.height - 20);
+        entryList = new BlanketConfigEntryList(this, client, this.width, this.height - 60, 30, this.height - 30);
         //entryList.setLeftPos(20);
 
-        inputWidget = new TextFieldWidget(this.textRenderer,100, 0, this.width/2, 20, new LiteralText("Search"));
+        int menuPos = 44;
+        inputWidget = new TextFieldWidget(this.textRenderer, menuPos, 5, this.width / 3, 20, new LiteralText("Search"));
+        menuPos += this.width / 3 + 10;
         this.addSelectableChild(inputWidget);
 
         inputWidget.setChangedListener(this::setSearch);
         inputWidget.setText(searchString); //this will invoke the changed listener :D
 
 
+
         this.addSelectableChild(entryList);
 
         this.setInitialFocus(inputWidget);
         //entryList.setElements(configList);
+        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new LiteralText("Filter"), (button) -> {
+            System.out.println("Button has been pressed");
+        });
+        menuPos += 50;
+        this.addSelectableChild(filterButtonWidget);
+        this.drawables.add(filterButtonWidget);
+
+
+        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new LiteralText("B"), (button) -> {
+            this.client.setScreen(new BulkActionScreen(this));
+        });
+        this.addSelectableChild(bulkButtonWidget);
+        this.drawables.add(bulkButtonWidget);
+
+
+
+        int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
+        this.addDrawableChild(this.quitButton = new ButtonWidget(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20, this.isEdited() ? new TranslatableText("text.cloth-config.cancel_discard") : new TranslatableText("gui.cancel"), (widget) -> {
+            this.quit();
+        }));
+        this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> {
+            this.saveAll(true);
+        }) {
+            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+                boolean hasErrors = false;
+
+                for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(ConfigSearchScreen.this.getCategorizedEntries().values())) {
+                    List<AbstractConfigEntry<?>> entries = abstractConfigEntries;
+
+                    for (AbstractConfigEntry<?> abstractConfigEntry : entries) {
+                        AbstractConfigEntry<?> entry = abstractConfigEntry;
+                        if (entry.getConfigError().isPresent()) {
+                            hasErrors = true;
+                            break;
+                        }
+                    }
+
+                    if (hasErrors) {
+                        break;
+                    }
+                }
+
+                this.active = ConfigSearchScreen.this.isEdited() && !hasErrors;
+                this.setMessage(hasErrors ? new TranslatableText("text.cloth-config.error_cannot_save") : new TranslatableText("text.cloth-config.save_and_done"));
+                super.render(matrices, mouseX, mouseY, delta);
+            }
+        });
+        this.drawables.add(saveButton);
+        this.drawables.add(quitButton);
 
     }
+
 
     public void setSearch(String str) {
         searchString = str;
@@ -111,6 +174,10 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
         return configList;
     }
 
+    public List<Pair<Field, AbstractConfigListEntry>> getConfigEntries() {
+        return this.configList;
+    }
+
     private void addEntry(List<Pair<Field, AbstractConfigListEntry>> configList, Field field, ConfigEntry configEntry) throws IllegalAccessException {
         AbstractConfigListEntry entry = ScreenHelper.createConfigEntry(field);
         entry.setScreen(this);
@@ -126,6 +193,11 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
         configList.add(new Pair(field, entry));
     }
 
+    @Override
+    public void saveAll(boolean openOtherScreens) {
+        super.saveAll(openOtherScreens);
+        ConfigHelper.saveConfig();
+    }
 
     @Override
     public Map<Text, List<AbstractConfigEntry<?>>> getCategorizedEntries() {
@@ -152,6 +224,10 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
 
         //The search box
         this.inputWidget.render(matrices, mouseX, mouseY, delta);
+
+        for(Drawable drawable : drawables) {
+            drawable.render(matrices, mouseX, mouseY, delta);
+        }
 
         super.render(matrices, mouseX, mouseY, delta);
     }
