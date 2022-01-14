@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.config.screen;
+package io.github.blanketmc.blanket.config.screen.util;
 
 import io.github.blanketmc.blanket.ClientFixes;
 import io.github.blanketmc.blanket.config.ConfigHelper;

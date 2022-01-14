@@ -2,7 +2,7 @@ package io.github.blanketmc.blanket.config;
 
 import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.ClientFixes;
-import io.github.blanketmc.blanket.config.screen.ScreenHelper;
+import io.github.blanketmc.blanket.config.screen.util.ScreenHelper;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -17,7 +17,6 @@ import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Level;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

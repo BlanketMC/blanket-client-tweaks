@@ -2,6 +2,7 @@ package io.github.blanketmc.blanket.config.screen;
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
+import io.github.blanketmc.blanket.config.screen.util.ScreenHelper;
 import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
 import io.github.blanketmc.blanket.config.screen.widget.FirstElementAlwaysDisplaySubCategoryEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
@@ -14,9 +15,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Pair;
 
 import java.lang.reflect.Field;
 import java.util.*;
+
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"rawtypes"})
@@ -26,7 +30,14 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     private TextFieldWidget inputWidget;
     private BlanketConfigEntryList entryList;
 
-    private final List<AbstractConfigListEntry> configList;
+    private final List<Pair<Field, AbstractConfigListEntry>> configList;
+
+    //For the search filter
+    private String searchString = "";
+    //For the more advanced type filter
+    private Function<ConfigEntry.Category[], Boolean> categoryFilter = field -> true;
+
+    private int sortOrder = 0;
 
     public ConfigSearchScreen(Screen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
@@ -43,26 +54,64 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     @Override
     protected void init() {
         super.init();
-        inputWidget = new TextFieldWidget(this.textRenderer,100, 0, this.width/2, 20, new LiteralText("Search"));
-        this.addSelectableChild(inputWidget);
 
         entryList = new BlanketConfigEntryList(this, client, this.width, this.height - 40, 20,this.height - 20);
         //entryList.setLeftPos(20);
 
+        inputWidget = new TextFieldWidget(this.textRenderer,100, 0, this.width/2, 20, new LiteralText("Search"));
+        this.addSelectableChild(inputWidget);
+
+        inputWidget.setChangedListener(this::setSearch);
+        inputWidget.setText(searchString); //this will invoke the changed listener :D
+
+
         this.addSelectableChild(entryList);
 
         this.setInitialFocus(inputWidget);
-        entryList.setElements(configList);
+        //entryList.setElements(configList);
 
     }
 
-    private List<AbstractConfigListEntry> fillConfigList() {
-        List<AbstractConfigListEntry> configList = new ArrayList<>();
+    public void setSearch(String str) {
+        searchString = str;
+        List<AbstractConfigListEntry> entriesToAdd = new ArrayList<>();
+        for(var entry : configList) {
+            ConfigEntry configEntry = entry.getLeft().getAnnotation(ConfigEntry.class);
+            String entryName = !configEntry.displayName().equals("") ? configEntry.displayName() : entry.getLeft().getName();
+
+            if (entryName.toLowerCase().contains(searchString.toLowerCase())) {
+                if (this.categoryFilter.apply(configEntry.categories())) {
+                    entriesToAdd.add(entry.getRight());
+                }
+            }
+        }
+
+        if (sortOrder != 0) {
+            entriesToAdd.sort((o1, o2) -> o1.getFieldName().getString().toLowerCase().compareTo(o2.getFieldName().getString().toLowerCase()) * sortOrder);
+        }
+        entryList.setElements(entriesToAdd);
+    }
+
+    /**
+     * -1: backwards
+     * 0: default
+     * 1: forward
+     * @param newOrder new sort order
+     */
+    public void setSortOrder(int newOrder) {
+        if (newOrder > 1 || newOrder < -1) {
+            throw new IllegalArgumentException();
+        }
+        this.sortOrder = newOrder;
+    }
+
+    private List<Pair<Field, AbstractConfigListEntry>> fillConfigList() {
+        List<Pair<Field, AbstractConfigListEntry>> configList = new ArrayList<>();
         ConfigHelper.iterateOnConfig(((field, configEntry) -> addEntry(configList, field, configEntry)));
         return configList;
     }
 
-    private void addEntry(List<AbstractConfigListEntry> configList, Field field, ConfigEntry configEntry) throws IllegalAccessException {
+    private void addEntry(List<Pair<Field, AbstractConfigListEntry>> configList, Field field, ConfigEntry configEntry) throws IllegalAccessException {
         AbstractConfigListEntry entry = ScreenHelper.createConfigEntry(field);
         entry.setScreen(this);
         if (configEntry.extraProperties().length != 0) {
@@ -70,11 +119,11 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
             if (!propertyEntries.isEmpty()){
                 var listEntry = new FirstElementAlwaysDisplaySubCategoryEntry(entry, propertyEntries,this);
 
-                configList.add(listEntry);
+                configList.add(new Pair(field, listEntry));
                 return;
             }
         }
-        configList.add(entry);
+        configList.add(new Pair(field, entry));
     }
 
 
@@ -85,7 +134,7 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
 
         List<AbstractConfigEntry<?>> list = this.configList.stream().collect(
                 (Supplier<List<AbstractConfigEntry<?>>>) ArrayList::new,
-                List::add,
+                (abstractConfigEntries, fieldAbstractConfigListEntryEntry) -> abstractConfigEntries.add(fieldAbstractConfigListEntryEntry.getRight()),
                 List::addAll
         );
 

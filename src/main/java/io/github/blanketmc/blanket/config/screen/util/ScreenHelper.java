@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.config.screen;
+package io.github.blanketmc.blanket.config.screen.util;
 
 import io.github.blanketmc.blanket.ClientFixes;
 import io.github.blanketmc.blanket.Config;
@@ -6,8 +6,6 @@ import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
 import io.github.blanketmc.blanket.config.ExtraProperty;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;

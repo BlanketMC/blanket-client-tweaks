@@ -180,4 +180,9 @@ public class FirstElementAlwaysDisplaySubCategoryEntry extends AbstractConfigLis
         configEntry.updateSelected(isSelected && getFocused() == configEntry);
         extraConfigListEntry.updateSelected(isSelected && getFocused() == extraConfigListEntry);
     }
+
+    @Override
+    public Text getFieldName() {
+        return configEntry.getFieldName();
+    }
 }
