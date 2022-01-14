@@ -39,7 +39,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
     private List<Drawable> drawables = new ArrayList<>();
     private ButtonWidget quitButton;
 
-    protected BulkActionScreen(ConfigSearchScreen parent) {
+    protected BulkActionScreen(BlanketConfigScreen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.bulk"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
         List<AbstractConfigEntry> entries = new ArrayList<>();
         addBulkModeCategory(entries, ConfigEntryBuilder.create(), parent);
@@ -109,7 +109,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
     }
 
 
-    private void addBulkModeCategory(List<AbstractConfigEntry> category, ConfigEntryBuilder entryBuilder, ConfigSearchScreen parent) {
+    private void addBulkModeCategory(List<AbstractConfigEntry> category, ConfigEntryBuilder entryBuilder, BlanketConfigScreen parent) {
         ActionData action = new ActionData();
 
         // Action selector button

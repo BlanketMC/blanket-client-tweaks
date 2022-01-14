@@ -15,11 +15,9 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class CategorySelectorScreen extends AbstractConfigScreen {
+public class FilterScreen extends AbstractConfigScreen {
 
     private BlanketConfigEntryList entries;
     private List<Drawable> drawables = new ArrayList<>();
@@ -31,7 +29,7 @@ public class CategorySelectorScreen extends AbstractConfigScreen {
     private /*static*/ final Set<ConfigEntry.Category> filteredCategories = new HashSet<>();
     private FilterMode filterMode = FilterMode.INCLUDE;
 
-    protected CategorySelectorScreen(ConfigSearchScreen parent) {
+    protected FilterScreen(BlanketConfigScreen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.filter"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 
         for (var category : ConfigEntry.Category.values()) {
@@ -81,9 +79,9 @@ public class CategorySelectorScreen extends AbstractConfigScreen {
 
     @Override
     public void saveAll(boolean openOtherScreens) {
-        ((ConfigSearchScreen)this.parent).categoryFilter = categories -> {
+        ((BlanketConfigScreen)this.parent).categoryFilter = categories -> {
             for (ConfigEntry.Category category : categories) {
-                if (CategorySelectorScreen.this.filteredCategories.contains(category)) {
+                if (FilterScreen.this.filteredCategories.contains(category)) {
                     return filterMode == FilterMode.INCLUDE;
                 }
             }
@@ -112,7 +110,7 @@ public class CategorySelectorScreen extends AbstractConfigScreen {
         var mode = entryBuilder.startEnumSelector(new TranslatableText("blanket-client-tweaks.config.filterMode"),
                 FilterMode.class,
                 this.filterMode);
-        mode.setSaveConsumer(filterMode -> CategorySelectorScreen.this.filterMode = filterMode);
+        mode.setSaveConsumer(filterMode -> FilterScreen.this.filterMode = filterMode);
 
         entries.add(mode.build());
 

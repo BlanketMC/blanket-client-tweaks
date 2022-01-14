@@ -9,7 +9,6 @@ import io.github.blanketmc.blanket.config.screen.widget.FirstElementAlwaysDispla
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
-import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -29,7 +28,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class ConfigSearchScreen extends AbstractConfigScreen {
+public class BlanketConfigScreen extends AbstractConfigScreen {
 
 
     private TextFieldWidget inputWidget;
@@ -48,13 +47,13 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     private ButtonWidget saveButton;
     private ButtonWidget quitButton;
 
-    private final CategorySelectorScreen categorySelectorScreen;
+    private final FilterScreen categorySelectorScreen;
 
-    public ConfigSearchScreen(Screen parent) {
+    public BlanketConfigScreen(Screen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 
         configList = fillConfigList();
-        categorySelectorScreen = new CategorySelectorScreen(this);
+        categorySelectorScreen = new FilterScreen(this);
     }
 
     @Override
@@ -111,7 +110,7 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
             public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 boolean hasErrors = false;
 
-                for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(ConfigSearchScreen.this.getCategorizedEntries().values())) {
+                for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(BlanketConfigScreen.this.getCategorizedEntries().values())) {
                     List<AbstractConfigEntry<?>> entries = abstractConfigEntries;
 
                     for (AbstractConfigEntry<?> abstractConfigEntry : entries) {
@@ -127,7 +126,7 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
                     }
                 }
 
-                this.active = ConfigSearchScreen.this.isEdited() && !hasErrors;
+                this.active = BlanketConfigScreen.this.isEdited() && !hasErrors;
                 this.setMessage(hasErrors ? new TranslatableText("text.cloth-config.error_cannot_save") : new TranslatableText("text.cloth-config.save_and_done"));
                 super.render(matrices, mouseX, mouseY, delta);
             }
