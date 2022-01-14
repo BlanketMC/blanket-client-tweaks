@@ -17,17 +17,16 @@ import net.minecraft.util.Formatting;
 import java.util.*;
 import java.util.function.Supplier;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class FilterScreen extends AbstractConfigScreen {
 
     private BlanketConfigEntryList entries;
     private List<Drawable> drawables = new ArrayList<>();
 
-    private ButtonWidget quitButton;
-    private ButtonWidget resetButton;
-
     private final List<AbstractConfigEntry> entryList;
     private /*static*/ final Set<ConfigEntry.Category> filteredCategories = new HashSet<>();
     private FilterMode filterMode = FilterMode.INCLUDE;
+    private SortMode sortMode = SortMode.DEFAULT;
 
     protected FilterScreen(BlanketConfigScreen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.filter"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
@@ -50,8 +49,8 @@ public class FilterScreen extends AbstractConfigScreen {
 
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(this.quitButton = new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, new TranslatableText("blanket-client-tweaks.config.filterMode"), (widget) -> {
-            this.saveAll(true);
+        this.addDrawableChild(new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, new TranslatableText("blanket-client-tweaks.config.filter"), (widget) -> {
+            this.saveAll(false);
             this.quit();
         }));
         /*
@@ -79,6 +78,7 @@ public class FilterScreen extends AbstractConfigScreen {
 
     @Override
     public void saveAll(boolean openOtherScreens) {
+        super.saveAll(openOtherScreens);
         ((BlanketConfigScreen)this.parent).categoryFilter = categories -> {
             for (ConfigEntry.Category category : categories) {
                 if (FilterScreen.this.filteredCategories.contains(category)) {
@@ -87,7 +87,8 @@ public class FilterScreen extends AbstractConfigScreen {
             }
             return filterMode == FilterMode.EXCLUDE;
         };
-        super.saveAll(openOtherScreens);
+
+        ((BlanketConfigScreen)this.parent).setSortOrder(sortMode.order);
     }
 
     @Override
@@ -105,8 +106,16 @@ public class FilterScreen extends AbstractConfigScreen {
 
     private List<AbstractConfigEntry> createEntries() {
         List<AbstractConfigEntry> entries = new ArrayList<>();
-
         ConfigEntryBuilder entryBuilder = ConfigEntryBuilder.create();
+
+
+        var sortOrder = entryBuilder.startEnumSelector(new TranslatableText("blanket-client-tweaks.config.order"),
+                SortMode.class,
+                sortMode);
+        sortOrder.setSaveConsumer(order -> FilterScreen.this.sortMode = order);
+        entries.add(sortOrder.build());
+
+
         var mode = entryBuilder.startEnumSelector(new TranslatableText("blanket-client-tweaks.config.filterMode"),
                 FilterMode.class,
                 this.filterMode);
@@ -138,6 +147,17 @@ public class FilterScreen extends AbstractConfigScreen {
     private enum FilterMode {
         INCLUDE,
         EXCLUDE,
+    }
+
+    private enum SortMode {
+        DEFAULT(0),
+        INCREASING(1),
+        DECREASING(-1),
+        ;
+        final int order;
+        private SortMode(int order) {
+            this.order = order;
+        }
     }
 
     /*

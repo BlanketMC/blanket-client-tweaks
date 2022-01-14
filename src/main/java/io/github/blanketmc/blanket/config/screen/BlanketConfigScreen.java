@@ -84,7 +84,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
         this.setInitialFocus(inputWidget);
         //entryList.setElements(configList);
-        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new LiteralText("Filter"), (button) -> {
+        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new TranslatableText("blanket-client-tweaks.config.filter"), (button) -> {
             this.client.setScreen(categorySelectorScreen);
         });
         menuPos += 50;
@@ -92,7 +92,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         this.drawables.add(filterButtonWidget);
 
 
-        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new LiteralText("B"), (button) -> {
+        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 80, 20, new TranslatableText("blanket-client-tweaks.config.bulk"), (button) -> {
             this.client.setScreen(new BulkActionScreen(this));
         });
         this.addSelectableChild(bulkButtonWidget);
