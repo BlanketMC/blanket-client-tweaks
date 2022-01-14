@@ -6,7 +6,6 @@ import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
 import io.github.blanketmc.blanket.config.screen.widget.FirstElementAlwaysDisplaySubCategoryEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -27,10 +26,12 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     private TextFieldWidget inputWidget;
     private BlanketConfigEntryList entryList;
 
-    private List<AbstractConfigListEntry> configList = new ArrayList<>();
+    private final List<AbstractConfigListEntry> configList;
 
     public ConfigSearchScreen(Screen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+
+        configList = fillConfigList();
     }
 
     @Override
@@ -51,25 +52,24 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
         this.addSelectableChild(entryList);
 
         this.setInitialFocus(inputWidget);
-        fillConfigList(entryList);
         entryList.setElements(configList);
 
     }
 
-    private void fillConfigList(BlanketConfigEntryList entryList) {
-        ConfigEntryBuilder entryBuilder = ConfigEntryBuilder.create();
-        configList = new ArrayList<>();
-        ConfigHelper.iterateOnConfig(this::addEntry);
+    private List<AbstractConfigListEntry> fillConfigList() {
+        List<AbstractConfigListEntry> configList = new ArrayList<>();
+        ConfigHelper.iterateOnConfig(((field, configEntry) -> addEntry(configList, field, configEntry)));
+        return configList;
     }
 
-    private void addEntry(Field field, ConfigEntry configEntry) throws IllegalAccessException {
+    private void addEntry(List<AbstractConfigListEntry> configList, Field field, ConfigEntry configEntry) throws IllegalAccessException {
         AbstractConfigListEntry entry = ScreenHelper.createConfigEntry(field);
         entry.setScreen(this);
         if (configEntry.extraProperties().length != 0) {
             List<AbstractConfigListEntry> propertyEntries = ScreenHelper.createExtraConfigEntries(configEntry.extraProperties());
             if (!propertyEntries.isEmpty()){
                 var listEntry = new FirstElementAlwaysDisplaySubCategoryEntry(entry, propertyEntries,this);
-                listEntry.setParent(entryList);
+
                 configList.add(listEntry);
                 return;
             }

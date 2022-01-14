@@ -29,7 +29,10 @@ public class BlanketConfigEntryList<E extends DynamicElementListWidget.ElementEn
 
     public void setElements(List<E> elements) {
         this.clearItems();
-        elements.forEach(BlanketConfigEntryList.this::addItem);
+        elements.forEach((e -> {
+            e.setParent(BlanketConfigEntryList.this);
+            BlanketConfigEntryList.this.addItem(e);
+        }));
         recentElements.clear();
     }
 
