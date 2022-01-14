@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ConfigSearchScreen extends AbstractConfigScreen {
 
 
@@ -40,7 +40,7 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     //For the search filter
     private String searchString = "";
     //For the more advanced type filter
-    private Function<ConfigEntry.Category[], Boolean> categoryFilter = field -> true;
+    public Function<ConfigEntry.Category[], Boolean> categoryFilter = field -> true;
 
     private int sortOrder = 0;
     private List<Drawable> drawables = new ArrayList<>();
@@ -48,10 +48,13 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
     private ButtonWidget saveButton;
     private ButtonWidget quitButton;
 
+    private final CategorySelectorScreen categorySelectorScreen;
+
     public ConfigSearchScreen(Screen parent) {
         super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 
         configList = fillConfigList();
+        categorySelectorScreen = new CategorySelectorScreen(this);
     }
 
     @Override
@@ -83,7 +86,7 @@ public class ConfigSearchScreen extends AbstractConfigScreen {
         this.setInitialFocus(inputWidget);
         //entryList.setElements(configList);
         ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new LiteralText("Filter"), (button) -> {
-            System.out.println("Button has been pressed");
+            this.client.setScreen(categorySelectorScreen);
         });
         menuPos += 50;
         this.addSelectableChild(filterButtonWidget);

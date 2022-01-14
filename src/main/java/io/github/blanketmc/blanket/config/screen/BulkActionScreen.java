@@ -1,15 +1,11 @@
 package io.github.blanketmc.blanket.config.screen;
 
-import com.google.common.collect.Lists;
-import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.PressableButtonEntry;
 import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
-import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.gui.entries.DropdownBoxEntry;
 import me.shedaniel.clothconfig2.gui.entries.EnumListEntry;
@@ -19,16 +15,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 import java.lang.reflect.Field;
 import java.util.*;
