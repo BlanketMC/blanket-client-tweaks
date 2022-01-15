@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.config;
+package io.github.blanketmc.blanket.config.screen;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

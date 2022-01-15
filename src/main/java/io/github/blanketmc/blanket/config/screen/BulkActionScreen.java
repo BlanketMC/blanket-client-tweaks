@@ -1,7 +1,7 @@
 package io.github.blanketmc.blanket.config.screen;
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
-import io.github.blanketmc.blanket.config.PressableButtonEntry;
+import io.github.blanketmc.blanket.config.screen.widget.PressableButtonEntry;
 import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;

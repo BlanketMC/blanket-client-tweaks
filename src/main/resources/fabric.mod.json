@@ -23,7 +23,7 @@
       "io.github.blanketmc.blanket.ClientFixes"
     ],
     "modmenu": [
-      "io.github.blanketmc.blanket.config.BlanketConfigScreenProvider"
+      "io.github.blanketmc.blanket.config.screen.BlanketConfigScreenProvider"
     ]
   },
   "mixins": [

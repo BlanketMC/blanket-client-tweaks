@@ -70,7 +70,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         entryList = new BlanketConfigEntryList(this, client, this.width, this.height - 60, 30, this.height - 30);
         //entryList.setLeftPos(20);
 
-        int menuPos = 44;
+        int menuPos = 40;
         inputWidget = new TextFieldWidget(this.textRenderer, menuPos, 5, this.width / 3, 20, new LiteralText("Search"));
         menuPos += this.width / 3 + 10;
         this.addSelectableChild(inputWidget);
