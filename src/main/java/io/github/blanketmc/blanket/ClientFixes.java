@@ -1,6 +1,7 @@
 package io.github.blanketmc.blanket;
 
 import io.github.blanketmc.blanket.config.ConfigHelper;
+import io.github.blanketmc.blanket.utils.KeyBindings;
 import net.fabricmc.api.ClientModInitializer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,7 @@ public class ClientFixes implements ClientModInitializer {
 
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
+		KeyBindings.init();
 	}
 
 	public static int countEnabledFeatures() {
