@@ -3,7 +3,7 @@ package io.github.blanketmc.blanket.mixin;
 import com.mojang.authlib.GameProfile;
 
 import io.github.blanketmc.blanket.Config;
-import io.github.blanketmc.blanket.utils.LockMinecartView;
+import io.github.blanketmc.blanket.fixes.RotatePlayerWithMinecart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,11 +18,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.MinecartEntity;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class clientPlayer_lockViewMixin extends AbstractClientPlayerEntity {
+public abstract class clientPlayer_rotatePlayerWithMinecart extends AbstractClientPlayerEntity {
 
     @Shadow public abstract float getYaw(float tickDelta);
 
-    public clientPlayer_lockViewMixin(ClientWorld world, GameProfile profile) {
+    public clientPlayer_rotatePlayerWithMinecart(ClientWorld world, GameProfile profile) {
         super(world, profile);
     }
 
@@ -33,14 +33,14 @@ public abstract class clientPlayer_lockViewMixin extends AbstractClientPlayerEnt
     )
     private void ridingTickTail(CallbackInfo info){
         Entity vehicle = this.getVehicle();
-        if(Config.lockMinecartView && vehicle instanceof MinecartEntity){
+        if(Config.rotatePlayerWithMinecart && vehicle instanceof MinecartEntity){
             /*Using MinecartEntity.getYaw() is unusable, because it's not the minecart's yaw...
              *There is NO method in mc to get the minecart's real yaw...
              *I need to create my own identifier method (from the speed)
              */
-            LockMinecartView.update((MinecartEntity)vehicle);
-            this.setYaw(LockMinecartView.calcYaw(this.getYaw()));
-            this.bodyYaw = LockMinecartView.calcYaw(this.bodyYaw);
+            RotatePlayerWithMinecart.update((MinecartEntity)vehicle);
+            this.setYaw(RotatePlayerWithMinecart.calcYaw(this.getYaw()));
+            this.bodyYaw = RotatePlayerWithMinecart.calcYaw(this.bodyYaw);
         }
     }
 
@@ -49,6 +49,6 @@ public abstract class clientPlayer_lockViewMixin extends AbstractClientPlayerEnt
             value = "INVOKE",
             target = "Lnet/minecraft/client/MinecraftClient;getSoundManager()Lnet/minecraft/client/sound/SoundManager;"))
     private void startRidingInject(Entity entity, boolean force, CallbackInfoReturnable<Object> info){
-        LockMinecartView.onStartRiding();
+        RotatePlayerWithMinecart.onStartRiding();
     }
 }

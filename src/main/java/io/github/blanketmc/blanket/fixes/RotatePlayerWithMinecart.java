@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.utils;
+package io.github.blanketmc.blanket.fixes;
 
 import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.util.math.MathHelper;
@@ -6,7 +6,12 @@ import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 
-public class LockMinecartView {
+/**
+ * This is an older code from another project
+ * should be cleaned and refactored.
+ * by - KosmX
+ */
+public class RotatePlayerWithMinecart {
     public static boolean smoothMode = true;
     public static boolean smartMode = true;
     public static int threshold = 8;
@@ -39,27 +44,27 @@ public class LockMinecartView {
 
     public static void update(MinecartEntity minecart) {
         lastYaw = yaw;
-        boolean update = setMinecartDirection(minecart);
-        if (tickAfterLastFollow++ > LockMinecartView.threshold) lastYaw = yaw;
+        boolean update = calculateNewDirection(minecart);
+        if (tickAfterLastFollow++ > RotatePlayerWithMinecart.threshold) lastYaw = yaw;
         else if (doCorrection) lastYaw = normalize(lastYaw + 180f);
         doCorrection = false;
         if (update) tickAfterLastFollow = 0;
         difference = normalize(yaw - lastYaw);
     }
 
-    public static boolean setMinecartDirection(MinecartEntity minecart) {
+    public static boolean calculateNewDirection(MinecartEntity minecart) {
         boolean update = false;
         float yawF = rawYaw;
         boolean correction = false;
         boolean successUpdate = updateSmartCorrection(minecart);
         if (minecart.getVelocity().lengthSquared() > 0.000002f) {
-            if (tickAfterPistonRail != LockMinecartView.threshold) tickAfterPistonRail++;
+            if (tickAfterPistonRail != RotatePlayerWithMinecart.threshold) tickAfterPistonRail++;
             if (pistorRailTick != 0) pistorRailTick--;
             yawF = sphericalFromVec3d(minecart.getVelocity());
             update = true;
             correction = true;
         } else if (minecart.getVelocity().lengthSquared() == 0f && successUpdate && posVelocity.lengthSquared() > 0.02f) {
-            if (pistorRailTick != LockMinecartView.threshold) pistorRailTick++;
+            if (pistorRailTick != RotatePlayerWithMinecart.threshold) pistorRailTick++;
             else tickAfterPistonRail = 0;
             yawF = getEighthDirection(sphericalFromVec3d(posVelocity));
             update = true;
@@ -69,7 +74,7 @@ public class LockMinecartView {
         rawLastYaw = rawYaw;
         rawYaw = yawF;
         if (correction) checkSmartCorrection(successUpdate);
-        setMinecartDirection(yawF);
+        calculateNewDirection(yawF);
         return update;
     }
     //-------------methods-----------------------------
@@ -83,13 +88,13 @@ public class LockMinecartView {
         tickAfterLastFollow = 100;
         lastVelocity = Vec3d.ZERO;
         lastSlowdown = 100;
-        tickAfterPistonRail = LockMinecartView.threshold;
+        tickAfterPistonRail = RotatePlayerWithMinecart.threshold;
         pistorRailTick = 0;
     }
 
-    private static void setMinecartDirection(float yawF) {
-        if (LockMinecartView.smoothMode) {
-            if (!LockMinecartView.rollerCoasterMode && tickAfterLastFollow > LockMinecartView.threshold) {
+    private static void calculateNewDirection(float yawF) {
+        if (RotatePlayerWithMinecart.smoothMode) {
+            if (!RotatePlayerWithMinecart.rollerCoasterMode && tickAfterLastFollow > RotatePlayerWithMinecart.threshold) {
                 yaw = yawF;
             } else if (doCorrection) {
                 yaw = normalize(yaw + 180f);
@@ -108,9 +113,9 @@ public class LockMinecartView {
 
     private static void checkSmartCorrection(boolean successUpdate) {
         boolean correction = false;
-        if (LockMinecartView.smartMode) {
+        if (RotatePlayerWithMinecart.smartMode) {
             float ang = 60f;
-            if (tickAfterPistonRail == LockMinecartView.threshold && floatCircleDistance(rawLastYaw, rawYaw, 360) > 180f - ang && floatCircleDistance(rawLastYaw, rawYaw, 360) < 180 + ang) {
+            if (tickAfterPistonRail == RotatePlayerWithMinecart.threshold && floatCircleDistance(rawLastYaw, rawYaw, 360) > 180f - ang && floatCircleDistance(rawLastYaw, rawYaw, 360) < 180 + ang) {
                 correction = true;
                 /*-------------------Explain, what does the following complicated code------------------------
                  *The Smart correction's aim is to make difference between a U-turn and a collision, what isn't an easy task
@@ -124,11 +129,10 @@ public class LockMinecartView {
                  * gotVelocity = zero
                  * posVelocity always real (while euclidean space isn't broken)
                  *
-                 *              :D          Don't give up!!! (message to everyone, who read my code)
                  */
                 if (successUpdate) {
                     boolean bl1 = posVelocity.lengthSquared() > 0.00004f && Math.abs(posVelocity.normalize().dotProduct(gotVelocity.normalize())) < 0.8f;//vectors dot product ~0, if vectors are ~perpendicular to each other
-                    boolean bl2 = (!bl1) || lastSlowdown < LockMinecartView.threshold && Math.abs(posVelocity.normalize().dotProduct(gotVelocity.normalize())) < 0.866f && gotVelocity.lengthSquared() < 0.32;
+                    boolean bl2 = (!bl1) || lastSlowdown < RotatePlayerWithMinecart.threshold && Math.abs(posVelocity.normalize().dotProduct(gotVelocity.normalize())) < 0.866f && gotVelocity.lengthSquared() < 0.32;
                     if (bl1 && !bl2) {
                         correction = false;
                     }
@@ -153,7 +157,7 @@ public class LockMinecartView {
     }
 
     public static float calcYaw(float entityYaw) {
-        return (LockMinecartView.rollerCoasterMode) ? (entityYaw + normalize(yaw - entityYaw)) : (entityYaw + difference);
+        return (RotatePlayerWithMinecart.rollerCoasterMode) ? (entityYaw + normalize(yaw - entityYaw)) : (entityYaw + difference);
     }
 
 

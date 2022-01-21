@@ -3,7 +3,7 @@ package io.github.blanketmc.blanket;
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.EntryListener;
-import io.github.blanketmc.blanket.utils.LockMinecartView;
+import io.github.blanketmc.blanket.fixes.RotatePlayerWithMinecart;
 
 import static io.github.blanketmc.blanket.config.ConfigEntry.Category.*;
 
@@ -78,7 +78,7 @@ public final class Config {
             listeners = lockMinecartViewListener.class,
             categories = {TWEAK}
     )
-    public static boolean lockMinecartView = true;
+    public static boolean rotatePlayerWithMinecart = true;
 
 
     /*
@@ -90,7 +90,7 @@ public final class Config {
     private static class lockMinecartViewListener extends EntryListener<Boolean> {
         @Override
         public Boolean onEntryChange(Boolean currentValue, Boolean newValue) {
-            if (newValue) LockMinecartView.onStartRiding();
+            if (newValue) RotatePlayerWithMinecart.onStartRiding();
             return newValue;
         }
     }
