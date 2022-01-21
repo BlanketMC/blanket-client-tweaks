@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface ConfigEntry {
 
     /**
@@ -48,6 +48,11 @@ public @interface ConfigEntry {
      * @return categories
      */
     Category[] categories();
+
+    /**
+     * @return Extra properties for config entry
+     */
+    String[] extraProperties() default {};
 
     /**
      * Enum to describe config entry types
