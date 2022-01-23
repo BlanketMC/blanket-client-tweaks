@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.mixin;
+package io.github.blanketmc.blanket.mixin.fixes;
 
 import com.mojang.authlib.GameProfile;
 
@@ -18,11 +18,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.MinecartEntity;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class clientPlayer_rotatePlayerWithMinecart extends AbstractClientPlayerEntity {
+public abstract class ClientPlayer_rotatePlayerWithMinecart extends AbstractClientPlayerEntity {
 
     @Shadow public abstract float getYaw(float tickDelta);
 
-    public clientPlayer_rotatePlayerWithMinecart(ClientWorld world, GameProfile profile) {
+    public ClientPlayer_rotatePlayerWithMinecart(ClientWorld world, GameProfile profile) {
         super(world, profile);
     }
 
