@@ -14,7 +14,8 @@
     "fixes.HandledScreen_mouseCloseMixin",
     "fixes.WolfEntity_tailSpinMixin",
     "fixes.YggdrasilUserApiService_syncBlockListMixin",
-    "performance.BiomeAccess_predictionMixin"
+    "performance.BiomeAccess_predictionMixin",
+    "fixes.AmethystBlock_AmethystSoundFix"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -85,6 +85,13 @@ public final class Config {
     )
     public static boolean wolfTailSpinFix = true;
 
+    //by KosmX
+    @ConfigEntry(
+            description = "Fix switched amethyst sound",
+            issues = "MC-248223",
+            categories = {BUGFIX, RECOMMENDED}
+    )
+    public static boolean fixSwappedAmethystSound = true;
 
     /*
 
