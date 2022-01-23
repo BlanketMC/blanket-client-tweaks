@@ -13,7 +13,16 @@
     "HandledScreen_mouseCloseMixin",
     "YggdrasilUserApiService_syncBlockListMixin",
     "clientCommands.ClientPlayerEntity_clientCommandsMixin",
-    "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin"
+    "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
+    "fixes.Entity_clientDamageMixin",
+    "fixes.Entity_lavaDamageMixin",
+    "fixes.Entity_localIdMixin",
+    "fixes.FireworkRocketEntity_particleMixin",
+    "fixes.GuardianEntityRenderer_beamMixin",
+    "fixes.HandledScreen_mouseCloseMixin",
+    "fixes.WolfEntity_tailSpinMixin",
+    "fixes.YggdrasilUserApiService_syncBlockListMixin",
+    "performance.BiomeAccess_predictionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

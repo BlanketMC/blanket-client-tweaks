@@ -4,7 +4,7 @@
 
 ## Everything is configurable 
 Go into mod settings, and configure everything!  
-For features, see [Config.class](https://github.com/BlanketMC/blanket-client-tweaks/blob/1.18/src/main/java/io/github/blanketmc/blanket/Config.java)  
+For features, see [Config.java](https://github.com/BlanketMC/blanket-client-tweaks/blob/1.18/src/main/java/io/github/blanketmc/blanket/Config.java)  
 
 
 ## Setup
