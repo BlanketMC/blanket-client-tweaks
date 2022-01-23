@@ -134,17 +134,20 @@ public final class ConfigHelper {
     }
 
     public static Object getDefaultValue(Field configField) {
-        ConfigEntry entry = configField.getAnnotation(ConfigEntry.class);
-        if (entry == null) throw new IllegalArgumentException(configField + " is not a config entry");
+        if (!configField.isAnnotationPresent(ConfigEntry.class) && !configField.isAnnotationPresent(ExtraProperty.class)) throw new IllegalArgumentException(configField + " is not a config entry");
 
         return defaults.get(configField);
     }
 
     static {
         defaults = new HashMap<>();
-        iterateOnConfig((field, configEntry) -> {
-            defaults.put(field, field.get(null));
-        });
+        for (Field field : Config.class.getFields()) {
+            if (Modifier.isStatic(field.getModifiers()) && (field.isAnnotationPresent(ConfigEntry.class) || field.isAnnotationPresent(ExtraProperty.class))) {
+                try {
+                    defaults.put(field, field.get(null));
+                } catch(IllegalAccessException ignore) { }
+            }
+        }
     }
 
     public interface ConfigIterator{
