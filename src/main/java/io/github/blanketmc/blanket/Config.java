@@ -74,11 +74,11 @@ public final class Config {
 
     //by KosmX
     @ConfigEntry(
-            description = "Locks the players view when using riding a minecart",
+            description = "Rotate the player with the minecart if it turns",
             listeners = lockMinecartViewListener.class,
-            categories = {TWEAK}
+            categories = {TWEAK, EXPERIMENTAL}
     )
-    public static boolean rotatePlayerWithMinecart = true;
+    public static boolean rotatePlayerWithMinecart = false;
 
 
     /*

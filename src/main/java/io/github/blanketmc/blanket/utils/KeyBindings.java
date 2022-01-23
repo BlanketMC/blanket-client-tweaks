@@ -29,6 +29,7 @@ public class KeyBindings {
         ClientTickEvents.END_CLIENT_TICK.register(KeyBindings::eventListener);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private static void eventListener(MinecraftClient minecraftClient) {
         while (rotatePlayerWithMinecraft_toggle.wasPressed()) {
             boolean oldVal = Config.rotatePlayerWithMinecart;
@@ -39,8 +40,8 @@ public class KeyBindings {
                 Field field = Config.class.getField("rotatePlayerWithMinecart");
                 if (field.getAnnotation(ConfigEntry.class).listeners().length > 0) {
                     boolean currentValue = field.getBoolean(config);
-                    for (Class<? extends EntryListener<Boolean>> listener : field.getAnnotation(ConfigEntry.class).listeners()) {
-                        Config.rotatePlayerWithMinecart = (ConfigHelper.callClassConstructor(listener)).onEntryChange(currentValue, oldVal);
+                    for (Class<? extends EntryListener> listener : field.getAnnotation(ConfigEntry.class).listeners()) {
+                        Config.rotatePlayerWithMinecart = (boolean)(ConfigHelper.callClassConstructor(listener)).onEntryChange(oldVal, currentValue);
                     }
                 }
             } catch(NoSuchFieldException | IllegalAccessException ignore) {}
