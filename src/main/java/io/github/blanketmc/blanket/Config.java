@@ -48,7 +48,7 @@ public final class Config {
 
     //by FX - PR0CESS
     @ConfigEntry(
-            description = "Fix guardian beam not rendering due to world time being too high",
+            description = "Fix guardian beam not rendering due to world time being too high\nSodium-extra has the same fix",
             issues = "MC-165595",
             categories = {BUGFIX, RECOMMENDED, RENDER}
     )
