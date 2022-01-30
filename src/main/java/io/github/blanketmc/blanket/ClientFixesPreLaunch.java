@@ -1,8 +1,10 @@
 package io.github.blanketmc.blanket;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.impl.util.UrlConversionException;
 import net.fabricmc.loader.impl.util.UrlUtil;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +12,16 @@ import java.net.URL;
 
 public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
     // Allow the mod to mixin directly into library classes
+
+    /**
+     * load mixins with conditions
+     */
+    private static void loadMixinsSelectively() {
+        if (!FabricLoader.getInstance().isModLoaded("sodium-extra")) {
+            Mixins.addConfiguration("blanket-client-tweaks_no-sodium-extra.json");
+        }
+    }
+
 
     private static final String[] mixinTargets = {
             "com/mojang/authlib/yggdrasil/YggdrasilUserApiService.class"
@@ -28,6 +40,8 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
+        loadMixinsSelectively();
+
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             Method method = classLoader.getClass().getMethod("addURL", URL.class);
