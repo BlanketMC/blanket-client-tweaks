@@ -57,7 +57,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         assert this.client != null;
         this.client.setScreen(parent);
     }
