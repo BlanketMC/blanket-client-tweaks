@@ -120,7 +120,7 @@ if(keysExists) {
 		projectId = "gxpkKtVH"
 		versionNumber = "${project.mod_version}"
 		versionName = "${project.mod_version}"
-		addGameVersion('1.18.1');
+		addGameVersion('1.18.2');
 		changelog = changes;
 		addLoader("fabric")
 		uploadFile = remapJar
@@ -134,7 +134,7 @@ if(keysExists) {
 			changelog = changes
 			releaseType = project.cfType
 
-			addGameVersion "1.18.1"
+			addGameVersion "1.18.2"
 			addGameVersion "Fabric"
 
 			relations {
