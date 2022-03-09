@@ -6,6 +6,7 @@
   "client": [
     "clientCommands.ClientPlayerEntity_clientCommandsMixin",
     "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
+    "fixes.EnderDragonEntityRenderer_crystalMixin",
     "fixes.Entity_clientDamageMixin",
     "fixes.Entity_lavaDamageMixin",
     "fixes.Entity_localIdMixin",

@@ -155,15 +155,11 @@ public class ClientCommands {
     }
 
     public static void sendToPlayer(String str) {
-        if (mc.player != null) {
-            mc.player.sendMessage(new LiteralText(str), false);
-        }
+        if (mc.player != null) mc.player.sendMessage(new LiteralText(str), false);
     }
 
     public static void sendToPlayer(Text text) {
-        if (mc.player != null) {
-            mc.player.sendMessage(text, false);
-        }
+        if (mc.player != null) mc.player.sendMessage(text, false);
     }
 
     private static Text fancyCommandInfo(Field field, ConfigEntry entry) throws IllegalAccessException {

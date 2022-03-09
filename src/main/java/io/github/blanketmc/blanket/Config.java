@@ -79,6 +79,12 @@ public final class Config {
 
     //by FX - PR0CESS
     @ConfigEntry(
+            description = "Fix end crystals attempting to heal the ender dragon",
+            issues = "MC-187100",
+            categories = BUGFIX
+    )
+    public static boolean crystalsTargetDeadDragonFix = true;
+
             description = "Fix wolf tail spinning if health is increased",
             issues = "MC-175622",
             categories = {BUGFIX, RENDER}
