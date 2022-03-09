@@ -77,6 +77,14 @@ public final class Config {
     )
     public static boolean optimizedBiomeAccess = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fix end crystals attempting to heal the ender dragon",
+            issues = "MC-187100",
+            categories = BUGFIX
+    )
+    public static boolean crystalsTargetDeadDragonFix = true;
+
 
     /*
 
