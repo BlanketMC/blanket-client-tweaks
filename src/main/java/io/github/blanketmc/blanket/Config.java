@@ -2,10 +2,18 @@ package io.github.blanketmc.blanket;
 
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
+import io.github.blanketmc.blanket.config.EntryListener;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.NarratorMode;
+import net.minecraft.client.util.NarratorManager;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.github.blanketmc.blanket.config.ConfigEntry.Category.*;
 
 public final class Config {
+
+    public static AtomicBoolean isNarratorOptionChange = new AtomicBoolean(false);
 
     //by KosmX
     @ConfigEntry(
@@ -81,7 +89,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix end crystals attempting to heal the ender dragon",
             issues = "MC-187100",
-            categories = BUGFIX
+            categories = {BUGFIX, RENDER}
     )
     public static boolean crystalsTargetDeadDragonFix = true;
 
@@ -101,9 +109,34 @@ public final class Config {
     )
     public static boolean fixSwappedAmethystSound = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fixes the narrator thread always being loaded even thought it's not being used",
+            categories = {PERFORMANCE, RECOMMENDED},
+            listeners = onDisableNarratorThreadChange.class
+    )
+    public static boolean disableNarratorThreadWhenUnused = true;
+
     /*
 
     Entry Listeners
 
      */
+
+    private static class onDisableNarratorThreadChange extends EntryListener<Boolean> {
+        @Override
+        public Boolean onEntryChange(Boolean currentValue, Boolean newValue) {
+            if (currentValue != newValue) {
+                MinecraftClient MC = MinecraftClient.getInstance();
+                if (newValue && MC.options.narrator == NarratorMode.OFF) {
+                    Config.isNarratorOptionChange.set(true);
+                    NarratorManager.INSTANCE.destroy();
+                } else if (!newValue && MC.options.narrator != NarratorMode.OFF) {
+                    disableNarratorThreadWhenUnused = false;
+                    NarratorManager.INSTANCE.addToast(MC.options.narrator);
+                }
+            }
+            return newValue;
+        }
+    }
 }
