@@ -48,9 +48,9 @@ public final class Config {
 
     //by FX - PR0CESS
     @ConfigEntry(
-            description = "Fix guardian beam not rendering due to world time being too high",
+            description = "Fix guardian beam not rendering due to world time being too high\nSodium-extra has the same fix",
             issues = "MC-165595",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean guardianBeamRenderFix = true;
 
@@ -58,7 +58,7 @@ public final class Config {
     @ConfigEntry(
             description = "Fix firework particles flashing when flying straight up",
             issues = "MC-245937",
-            categories = {BUGFIX, RECOMMENDED}
+            categories = {BUGFIX, RECOMMENDED, RENDER}
     )
     public static boolean flashingFireworkParticlesFix = true;
 
@@ -85,6 +85,19 @@ public final class Config {
     )
     public static boolean crystalsTargetDeadDragonFix = true;
 
+            description = "Fix wolf tail spinning if health is increased",
+            issues = "MC-175622",
+            categories = {BUGFIX, RENDER}
+    )
+    public static boolean wolfTailSpinFix = true;
+
+    //by KosmX
+    @ConfigEntry(
+            description = "Fix switched amethyst sound",
+            issues = "MC-248223",
+            categories = {BUGFIX, RECOMMENDED}
+    )
+    public static boolean fixSwappedAmethystSound = true;
 
     /*
 

@@ -24,37 +24,16 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
                 JsonObject configNode = node.get(entryName).getAsJsonObject();
                 if (!configNode.has("value")) return;
 
-
-                Class<?> type = field.getType();
-
-                if (type.equals(Boolean.TYPE)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isBoolean()) return;
-                    field.set(null, configNode.get("value").getAsBoolean());
-                } else if (type.equals(Float.TYPE)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(null, configNode.get("value").getAsFloat());
-                } else if (type.equals(Double.TYPE)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(null, configNode.get("value").getAsDouble());
-                } else if (type.equals(Integer.TYPE)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(null, configNode.get("value").getAsInt());
-                } else if (type.equals(Long.TYPE)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isNumber()) return;
-                    field.set(null, configNode.get("value").getAsLong());
-                } else if (type.equals(String.class)) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
-                    field.set(null, configNode.get("value").getAsString());
-                } else if (type.isEnum()) {
-                    if (!configNode.get("value").getAsJsonPrimitive().isString()) return;
-                    try { //now, this is tricky
-                        Method valueOf = type.getMethod("valueOf", String.class);
-                        field.set(null, valueOf.invoke(null, configNode.get("value").getAsString()));
-                    } catch(NoSuchMethodException | InvocationTargetException e) {
-                        e.printStackTrace();
+                fromJson(field, configNode.get("value"));
+                if (configEntry.extraProperties().length != 0 && configNode.has("extra")) {
+                    JsonObject extraNode = configNode.get("extra").getAsJsonObject();
+                    for (String extraProperty : configEntry.extraProperties()) {
+                        if (extraNode.has(extraProperty)) {
+                            try {
+                                fromJson(Config.class.getField(extraProperty), extraNode.get(extraProperty));
+                            } catch(NoSuchFieldException ignore) {}
+                        }
                     }
-                } else {
-                    ClientFixes.log(Level.ERROR, "Config: " + field.getName() + " can not be imported: Unknown type", true);
                 }
             }
         });
@@ -99,27 +78,79 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
         node.add("categories", categories);
 
 
+        node.add("value", toJson(field));
+
+        if (configEntry.extraProperties().length != 0) {
+            JsonObject extraProps = new JsonObject();
+            for (String extraProperty : configEntry.extraProperties()) {
+                try {
+                    extraProps.add(extraProperty, toJson(Config.class.getField(extraProperty)));
+                } catch(NoSuchFieldException ignore) {}
+            }
+            node.add("extra", extraProps);
+        }
+
+        return node;
+    }
+
+    protected static JsonElement toJson(Field field) throws IllegalAccessException {
         Class<?> type = field.getType();
 
         if (type.equals(Boolean.TYPE)) {
-            node.addProperty("value", (boolean)field.get(null));
+            return new JsonPrimitive((boolean)field.get(null));
         } else if (type.equals(Float.TYPE)) {
-            node.addProperty("value", (float)field.get(null));
+            return new JsonPrimitive((float)field.get(null));
         } else if (type.equals(Double.TYPE)) {
-            node.addProperty("value", (double)field.get(null));
+            return new JsonPrimitive((double)field.get(null));
         } else if (type.equals(Integer.TYPE)) {
-            node.addProperty("value", (int)field.get(null));
+            return new JsonPrimitive((int)field.get(null));
         } else if (type.equals(Long.TYPE)) {
-            node.addProperty("value", (long)field.get(null));
+            return new JsonPrimitive((long)field.get(null));
+        } else if (type.equals(String.class)) {
+            return new JsonPrimitive((String) field.get(null));
         } else if (type.isEnum()) {
             try {
                 Method toString = type.getMethod("toString");
-                node.addProperty("value", (String)toString.invoke(field.get(null)));
+                return new JsonPrimitive((String)toString.invoke(field.get(null)));
             } catch(NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
-        return node;
+        throw new IllegalArgumentException("unknown type: " + type + " for field: " + field.getName());
+    }
+
+    protected static void fromJson(Field field, JsonElement configNode) throws IllegalAccessException {
+        Class<?> type = field.getType();
+
+        if (type.equals(Boolean.TYPE)) {
+            if (!configNode.getAsJsonPrimitive().isBoolean()) return;
+            field.set(null, configNode.getAsBoolean());
+        } else if (type.equals(Float.TYPE)) {
+            if (!configNode.getAsJsonPrimitive().isNumber()) return;
+            field.set(null, configNode.getAsFloat());
+        } else if (type.equals(Double.TYPE)) {
+            if (!configNode.getAsJsonPrimitive().isNumber()) return;
+            field.set(null, configNode.getAsDouble());
+        } else if (type.equals(Integer.TYPE)) {
+            if (!configNode.getAsJsonPrimitive().isNumber()) return;
+            field.set(null, configNode.getAsInt());
+        } else if (type.equals(Long.TYPE)) {
+            if (!configNode.getAsJsonPrimitive().isNumber()) return;
+            field.set(null, configNode.getAsLong());
+        } else if (type.equals(String.class)) {
+            if (!configNode.getAsJsonPrimitive().isString()) return;
+            field.set(null, configNode.getAsString());
+        } else if (type.isEnum()) {
+            if (!configNode.getAsJsonPrimitive().isString()) return;
+            try { //now, this is tricky
+                Method valueOf = type.getMethod("valueOf", String.class);
+                field.set(null, valueOf.invoke(null, configNode.getAsString()));
+            } catch(NoSuchMethodException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        } else {
+            ClientFixes.log(Level.ERROR, "Config: " + field.getName() + " can not be imported: Unknown type", true);
+        }
     }
 
     static {
@@ -139,7 +170,11 @@ public class ConfigJsonSerializer implements JsonSerializer<Config>, JsonDeseria
             "description" : "some description",
             "issues" : ["MC-1","MC-111"],
             "categories" : ["GENERAL", "BUGFIX", "RECOMMENDED"],
-            "value" : 42
+            "value" : 42,
+            "extra" : {
+                "extraProperty1" : 1,
+                "extraProperty2" : true
+            }
          },
          ...
     }

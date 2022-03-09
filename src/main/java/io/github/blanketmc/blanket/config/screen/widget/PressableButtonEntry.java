@@ -1,4 +1,4 @@
-package io.github.blanketmc.blanket.config;
+package io.github.blanketmc.blanket.config.screen.widget;
 
 import com.google.common.collect.Lists;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;

@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface ConfigEntry {
 
     /**
@@ -50,21 +50,30 @@ public @interface ConfigEntry {
     Category[] categories();
 
     /**
+     * @return Extra properties for config entry
+     */
+    String[] extraProperties() default {};
+
+    /**
      * Enum to describe config entry types
      */
     enum Category {
+
         /**
          * Recommended config, defaults to ON.
          */
         RECOMMENDED("RECOMMENDED"),
+
         /**
          * Fixes a bug in Minecraft.
          */
         BUGFIX("BUGFIX"),
+
         /**
          * A Client-tweak, not a bugfix. Still can be very useful.
          */
         TWEAK("TWEAK"),
+
         /**
          * Experimental solution, be careful with these!
          */
@@ -76,9 +85,15 @@ public @interface ConfigEntry {
         SINGLEPLAYER("SINGLEPLAYER"),
 
         /**
+         * The fix/tweak is related to Rendering.
+         */
+        RENDER("RENDER"),
+
+        /**
          * The fix/tweak is related to User Interface.
          */
         UI("UI"),
+
         /**
          * The fix/tweak can be considered as a performance fix.
          */

@@ -12,13 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HandledScreen.class)
 public abstract class HandledScreen_mouseCloseMixin {
 
-    @Shadow public abstract void onClose();
+    @Shadow public abstract void close();
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void listenToCloseAction(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir){
         if (Config.mouseCloseNotHandledFix) {
-            if (MinecraftClient.getInstance().options.keyInventory.matchesMouse(button)) {
-                this.onClose();
+            if (MinecraftClient.getInstance().options.inventoryKey.matchesMouse(button)) {
+                this.close();
                 cir.setReturnValue(true);
             }
         }
