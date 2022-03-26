@@ -56,14 +56,6 @@ public final class Config {
 
     //by FX - PR0CESS
     @ConfigEntry(
-            description = "Fix firework particles flashing when flying straight up",
-            issues = "MC-245937",
-            categories = {BUGFIX, RECOMMENDED, RENDER}
-    )
-    public static boolean flashingFireworkParticlesFix = true;
-
-    //by FX - PR0CESS
-    @ConfigEntry(
             description = "Fix entity id being shared by the client renderer and integrated server",
             issues = "MC-238384",
             categories = {BUGFIX, SINGLEPLAYER}
