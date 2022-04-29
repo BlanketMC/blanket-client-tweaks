@@ -1,11 +1,8 @@
 package io.github.blanketmc.blanket;
 
-import net.fabricmc.loader.api.FabricLoader;
+import io.github.blanketmc.blanket.utils.PlatformUtils;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.fabricmc.loader.impl.util.UrlConversionException;
-import net.fabricmc.loader.impl.util.UrlUtil;
 import org.spongepowered.asm.mixin.Mixins;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -17,7 +14,7 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
      * load mixins with conditions
      */
     private static void loadMixinsSelectively() {
-        if (!FabricLoader.getInstance().isModLoaded("sodium-extra")) {
+        if (PlatformUtils.getInstance().isModLoaded("sodium-extra")) {
             Mixins.addConfiguration("blanket-client-tweaks_no-sodium-extra.json");
         }
     }
@@ -26,17 +23,6 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
     private static final String[] mixinTargets = {
             "com/mojang/authlib/yggdrasil/YggdrasilUserApiService.class"
     };
-
-    private static URL getUrl(ClassLoader loader, String file) {
-        URL url = loader.getResource(file);
-        if (url == null) return null;
-        try {
-            if ((url = UrlUtil.getSource(file, url)) != null) return url;
-        } catch (UrlConversionException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     public void onPreLaunch() {
@@ -47,7 +33,7 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
             Method method = classLoader.getClass().getMethod("addURL", URL.class);
             method.setAccessible(true);
             for (String mixinTarget : mixinTargets) {
-                URL url = getUrl(classLoader.getParent().getParent().getParent(), mixinTarget);
+                URL url = PlatformUtils.getInstance().getUrl(classLoader.getParent().getParent().getParent(), mixinTarget);
                 if (url == null) {
                     System.out.println("Unable to apply: "+ mixinTarget);
                     continue;
