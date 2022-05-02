@@ -4,6 +4,7 @@
   "package": "io.github.blanketmc.blanket.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "accessors.EntityAttributeModifierAccessor",
     "clientCommands.ClientPlayerEntity_clientCommandsMixin",
     "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
     "fixes.AmethystBlock_AmethystSoundFix",
@@ -13,6 +14,7 @@
     "fixes.Entity_localIdMixin",
     "fixes.FireworkRocketEntity_particleMixin",
     "fixes.HandledScreen_mouseCloseMixin",
+    "fixes.ItemStack_tooltipMixin",
     "fixes.WolfEntity_tailSpinMixin",
     "fixes.YggdrasilUserApiService_syncBlockListMixin",
     "performance.BiomeAccess_predictionMixin"

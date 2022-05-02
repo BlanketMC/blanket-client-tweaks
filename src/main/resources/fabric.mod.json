@@ -17,6 +17,8 @@
   "license": "MIT",
   "icon": "assets/blanket-client-tweaks/icon.png",
 
+  "accessWidener" : "blanket-client-tweaks.accesswidener",
+
   "environment": "client",
   "entrypoints": {
     "preLaunch": [

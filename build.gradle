@@ -40,6 +40,10 @@ dependencies {
 	compileOnly("com.google.code.findbugs:annotations:3.0.1")
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/blanket-client-tweaks.accesswidener")
+}
+
 processResources {
 	inputs.property "version", project.version
 

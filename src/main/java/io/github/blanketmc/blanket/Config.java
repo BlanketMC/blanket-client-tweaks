@@ -101,6 +101,13 @@ public final class Config {
     )
     public static boolean fixSwappedAmethystSound = true;
 
+    //by FX - PR0CESS
+    @ConfigEntry(
+            description = "Fixes Custom attribute modifiers that use the vanilla UUIDs don't display in tooltip properly",
+            categories = BUGFIX
+    )
+    public static boolean itemStackTooltipUUIDFix = true;
+
     /*
 
     Entry Listeners
