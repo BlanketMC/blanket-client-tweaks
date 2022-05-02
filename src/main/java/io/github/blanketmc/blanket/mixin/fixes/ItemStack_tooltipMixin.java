@@ -49,7 +49,8 @@ public class ItemStack_tooltipMixin {
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getId()Ljava/util/UUID;"
+                    target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getId()Ljava/util/UUID;",
+                    ordinal = 0
             )
     )
     private void getTooltip(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir,
