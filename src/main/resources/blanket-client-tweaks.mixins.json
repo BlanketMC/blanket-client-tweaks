@@ -6,6 +6,7 @@
   "client": [
     "clientCommands.ClientPlayerEntity_clientCommandsMixin",
     "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
+    "fixes.AmethystBlock_AmethystSoundFix",
     "fixes.EnderDragonEntityRenderer_crystalMixin",
     "fixes.Entity_clientDamageMixin",
     "fixes.Entity_lavaDamageMixin",
@@ -13,10 +14,14 @@
     "fixes.HandledScreen_mouseCloseMixin",
     "fixes.WolfEntity_tailSpinMixin",
     "fixes.YggdrasilUserApiService_syncBlockListMixin",
-    "performance.BiomeAccess_predictionMixin",
-    "fixes.AmethystBlock_AmethystSoundFix"
+    "narrator.NarratorManager_toggleMixin",
+    "performance.BiomeAccess_predictionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "narrator.NarratorWindows_destroyMixin",
+    "narrator.Option_toggleMixin"
+  ]
 }

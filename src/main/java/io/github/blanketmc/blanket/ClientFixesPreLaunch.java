@@ -21,7 +21,8 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
 
 
     private static final String[] mixinTargets = {
-            "com/mojang/authlib/yggdrasil/YggdrasilUserApiService.class"
+            "com/mojang/authlib/yggdrasil/YggdrasilUserApiService.class",
+            "com/mojang/text2speech/NarratorWindows.class"
     };
 
     @Override

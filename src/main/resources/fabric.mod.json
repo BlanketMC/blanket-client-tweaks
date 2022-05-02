@@ -33,6 +33,7 @@
     "blanket-client-tweaks.mixins.json"
   ],
 
+  "accessWidener" : "blanket-client-tweaks.accesswidener",
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
