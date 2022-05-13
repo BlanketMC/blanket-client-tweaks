@@ -2,6 +2,9 @@ package io.github.blanketmc.blanket;
 
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
+import io.github.blanketmc.blanket.config.EntryListener;
+import io.github.blanketmc.blanket.config.ExtraProperty;
+import io.github.blanketmc.blanket.fixes.RotatePlayerWithMinecart;
 
 import static io.github.blanketmc.blanket.config.ConfigEntry.Category.*;
 
@@ -62,6 +65,28 @@ public final class Config {
     )
     public static boolean sharedEntityIdFix = true;
 
+    //by KosmX
+    @ConfigEntry(
+            description = "Rotate the player with the minecart if it turns",
+            listeners = lockMinecartViewListener.class,
+            categories = {TWEAK, EXPERIMENTAL},
+            extraProperties = {
+                    "rotatePlayerWithMinecart_smartMode",
+                    "rotatePlayerWithMinecart_threshold",
+                    "rotatePlayerWithMinecart_alwaysLookForward"
+            }
+    )
+    public static boolean rotatePlayerWithMinecart = false;
+
+    @ExtraProperty(description = "Try to detect U-turns and collisions")
+    public static boolean rotatePlayerWithMinecart_smartMode = true;
+
+    @ExtraProperty(description = "Minimum speed to start following minecart direction")
+    public static int rotatePlayerWithMinecart_threshold = 8;
+
+    @ExtraProperty(description = "Always look forward")
+    public static boolean rotatePlayerWithMinecart_alwaysLookForward = false;
+
     //by FX - PR0CESS
     @ConfigEntry(
             description = "Optimized the getBiome call to be 25% - 75% faster",
@@ -98,4 +123,12 @@ public final class Config {
     Entry Listeners
 
      */
+
+    private static class lockMinecartViewListener extends EntryListener<Boolean> {
+        @Override
+        public Boolean onEntryChange(Boolean currentValue, Boolean newValue) {
+            if (newValue) RotatePlayerWithMinecart.onStartRiding();
+            return newValue;
+        }
+    }
 }

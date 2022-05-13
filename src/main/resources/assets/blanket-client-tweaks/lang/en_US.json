@@ -8,6 +8,8 @@
   "blanket-client-tweaks.config.doBulkAction": "%s all %s tweak --->",
   "blanket-client-tweaks.config.confirmTitle": "Do you really want to do bulk action?",
   "blanket-client-tweaks.config.confirmText": "Do you really want to\n%s all %s tweaks?",
+  "blanket-client-tweaks.keys.rotateMinecartKey": "Toggle rotateWithMinecraft",
+  "blanket-client-tweaks.keys.category": "Blanket client",
   "blanket-client-tweaks.config.filterMode": "Filter mode",
   "blanket-client-tweaks.config.filter": "Filter",
   "blanket-client-tweaks.config.order": "Sort order:"

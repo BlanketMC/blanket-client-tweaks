@@ -22,6 +22,7 @@ public class ExtraPropertyElementBuilder extends AbstractConfigElementBuilder {
 
     @Override
     protected Text getText() {
-        return ConfigHelper.getTextComponent(extraProperty.name(), configField.getName());
+        String[] fieldName = configField.getName().split("_");
+        return ConfigHelper.getTextComponent(extraProperty.name(), fieldName[fieldName.length - 1]);
     }
 }
