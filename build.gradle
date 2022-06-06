@@ -2,7 +2,7 @@ plugins {
 	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
-	id "com.modrinth.minotaur" version "1.2.1"
+	id "com.modrinth.minotaur" version "2.+"
 	id 'io.github.juuxel.loom-quiltflower' version '1.6.0'
 }
 
@@ -98,35 +98,38 @@ if(!isRelease){
 
 version = ext.mod_version
 
-ext.keysExists = ENV.CURSEFORGE_TOKEN != null;
+ext.keysExists = ENV.CURSEFORGE_TOKEN != null || project.getGradle().getStartParameter().isDryRun()
 
 
-import com.modrinth.minotaur.TaskModrinthUpload
-import com.modrinth.minotaur.request.VersionType
 
 if(keysExists) {
 	println("Keys loaded, loading publish scripts")
 
 	project.ext.keys = new Properties()
-	project.ext.keys.curseforge_key = ENV.CURSEFORGE_TOKEN
-	project.ext.keys.modrinth_token = ENV.MODRINTH_TOKEN
-	project.ext.keys.kosmx_maven = ENV.KOSMX_TOKEN //KosmX's maven (maven.kosmx.dev)
+	if (project.getGradle().getStartParameter().isDryRun()) {
+		println("Dry run, loading publish scripts")
+		//These are fake, don't waste your time with it.
+		project.ext.keys.curseforge_key = "00000000-0000-0000-0000-000000000000"
+		project.ext.keys.modrinth_token = "gho_pJ9dGXVKpfzZp4PUHSxYEq9hjk0h288Gwj4S"
+		project.ext.keys.kosmx_maven = "V2h5IGRpZCB5b3UgZGVjb2RlIGl0PyAg"
+	} else {
+		project.ext.keys.curseforge_key = ENV.CURSEFORGE_TOKEN
+		project.ext.keys.modrinth_token = ENV.MODRINTH_TOKEN
+		project.ext.keys.kosmx_maven = ENV.KOSMX_TOKEN //KosmX's maven (maven.kosmx.dev)
+	}
 
-	task publishModrinth(type: TaskModrinthUpload) {
-		if (project.isRelease) {
-			versionType = VersionType.RELEASE
-		}
-		else {
-			versionType = VersionType.ALPHA
-		}
+	modrinth {
+
+		versionType = project.cfType
+
 		token = project.keys.modrinth_token;
 
 		projectId = "gxpkKtVH"
 		versionNumber = "${project.mod_version}"
 		versionName = "${project.mod_version}"
-		addGameVersion('1.18.2');
-		changelog = changes;
-		addLoader("fabric")
+		gameVersions = ['1.19']
+		changelog = changes
+		loaders = ["fabric", "quilt"]
 		uploadFile = remapJar
 	}
 
@@ -138,7 +141,7 @@ if(keysExists) {
 			changelog = changes
 			releaseType = project.cfType
 
-			addGameVersion "1.18.2"
+			addGameVersion "1.19"
 			addGameVersion "Fabric"
 
 			relations {
@@ -164,7 +167,7 @@ if(keysExists) {
 
 		finalizedBy(publish)
 		finalizedBy(tasks.curseforge)
-		finalizedBy(publishModrinth)
+		finalizedBy("modrinth")
 	}
 }
 
