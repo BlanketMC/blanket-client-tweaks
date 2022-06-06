@@ -27,7 +27,7 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
     @Override
     public void onPreLaunch() {
         loadMixinsSelectively();
-
+        /*
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             Method method = classLoader.getClass().getMethod("addURL", URL.class);
@@ -43,5 +43,7 @@ public class ClientFixesPreLaunch implements PreLaunchEntrypoint {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
+         */
     }
 }

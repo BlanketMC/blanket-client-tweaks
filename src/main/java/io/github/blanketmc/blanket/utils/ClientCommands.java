@@ -14,7 +14,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -48,9 +48,9 @@ public class ClientCommands {
     }
 
     private static int listCategories(CommandContext<ServerCommandSource> context) {
-        MutableText description = new LiteralText("\n§f§lCategories:\n");
+        MutableText description = Text.literal("\n§f§lCategories:\n");
         for (ConfigEntry.Category category : ConfigEntry.Category.values()) {
-            description.append(new LiteralText(category.name().toLowerCase()+"\n").styled((style) -> {
+            description.append(Text.literal(category.name().toLowerCase()+"\n").styled((style) -> {
                 return style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + PREFIX + " list " + category.name()));
             }));
         }
@@ -61,9 +61,9 @@ public class ClientCommands {
     private static int listCategoryEntries(CommandContext<ServerCommandSource> context) {
         ConfigEntry.Category category = context.getArgument("category", ConfigEntry.Category.class);
         List<Field> entries = ConfigHelper.getConfigFieldsForCategory(category);
-        MutableText description = new LiteralText("\n§f§l"+category.name()+":\n");
+        MutableText description = Text.literal("\n§f§l"+category.name()+":\n");
         for (Field field : entries) {
-            description.append(new LiteralText(field.getName()+"\n").styled((style) -> {
+            description.append(Text.literal(field.getName()+"\n").styled((style) -> {
                 return style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + PREFIX + " " + field.getName()));
             }));
         }
@@ -155,7 +155,7 @@ public class ClientCommands {
     }
 
     public static void sendToPlayer(String str) {
-        if (mc.player != null) mc.player.sendMessage(new LiteralText(str), false);
+        if (mc.player != null) mc.player.sendMessage(Text.literal(str), false);
     }
 
     public static void sendToPlayer(Text text) {
@@ -163,41 +163,41 @@ public class ClientCommands {
     }
 
     private static Text fancyCommandInfo(Field field, ConfigEntry entry) throws IllegalAccessException {
-        MutableText description = new LiteralText("\n§f§l"+field.getName()+"\n");
+        MutableText description = Text.literal("\n§f§l"+field.getName()+"\n");
 
         if (!entry.description().equals("")) {
-            description = description.append(new LiteralText("§r"+entry.description()+"\n").formatted(Formatting.RESET));
+            description = description.append(Text.literal("§r"+entry.description()+"\n").formatted(Formatting.RESET));
         }
         if (entry.issues().length > 0) {
-            description.append(new LiteralText("Fixes: "));
+            description.append(Text.literal("Fixes: "));
             for (String issue : entry.issues()) {
-                description.append(new LiteralText("§6["+issue+"]").styled((style) -> {
+                description.append(Text.literal("§6["+issue+"]").styled((style) -> {
                     return style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ClientFixes.mcIssuePrefix+issue));
                 }));
             }
-            description.append(new LiteralText("§r\n"));
+            description.append(Text.literal("§r\n"));
         }
 
-        description.append(new LiteralText("Tags: "));
+        description.append(Text.literal("Tags: "));
         Iterator<ConfigEntry.Category> iterator = Arrays.stream(entry.categories()).iterator();
         while (iterator.hasNext()) {
             ConfigEntry.Category category = iterator.next();
-            description.append(new LiteralText("§b"+category.name()).styled((style) -> {
+            description.append(Text.literal("§b"+category.name()).styled((style) -> {
                 return style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + PREFIX + " list "+category.name()));
             }));
             if (iterator.hasNext()) {
-                description.append(new LiteralText(","));
+                description.append(Text.literal(","));
             }
         }
-        description.append(new LiteralText("§r\n"));
+        description.append(Text.literal("§r\n"));
 
-        description.append(new LiteralText("Current Value: "));
+        description.append(Text.literal("Current Value: "));
         if (field.getType().equals(Boolean.TYPE)) {
             boolean value = field.getBoolean(config);
-            description.append(new LiteralText(value ? "§2True" : "§4False"));
+            description.append(Text.literal(value ? "§2True" : "§4False"));
         } else {
             boolean isDefault = field.get(config).equals(ConfigHelper.getDefaultValue(field));
-            description.append(new LiteralText((isDefault ? "§2" : "§b")+field.get(config).toString()));
+            description.append(Text.literal((isDefault ? "§2" : "§b")+field.get(config).toString()));
         }
         return description;
     }

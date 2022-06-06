@@ -1,8 +1,8 @@
 package io.github.blanketmc.blanket.config.screen;
 
 import io.github.blanketmc.blanket.config.ConfigEntry;
-import io.github.blanketmc.blanket.config.screen.widget.PressableButtonEntry;
 import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
+import io.github.blanketmc.blanket.config.screen.widget.PressableButtonEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
@@ -17,10 +17,8 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import java.lang.reflect.Field;
@@ -40,7 +38,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
     private ButtonWidget quitButton;
 
     protected BulkActionScreen(BlanketConfigScreen parent) {
-        super(parent, new TranslatableText("blanket-client-tweaks.config.bulk"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.bulk"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
         List<AbstractConfigEntry> entries = new ArrayList<>();
         addBulkModeCategory(entries, ConfigEntryBuilder.create(), parent);
         entriesList = entries;
@@ -55,7 +53,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
         this.addSelectableChild(entryList);
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(this.quitButton = new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, new TranslatableText("gui.cancel"), (widget) -> this.quit()));
+        this.addDrawableChild(this.quitButton = new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, Text.translatable("gui.cancel"), (widget) -> this.quit()));
 
         super.init();
     }
@@ -83,7 +81,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
                 List::add,
                 List::addAll
         );
-        map.put(new LiteralText("bulk"), list);
+        map.put(Text.literal("bulk"), list);
         return map;
     }
 
@@ -114,7 +112,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
 
         // Action selector button
         EnumSelectorBuilder<ActionType> actionEntry = entryBuilder.startEnumSelector(
-                new TranslatableText("blanket-client-tweaks.config.chooseBulk"),
+                Text.translatable("blanket-client-tweaks.config.chooseBulk"),
                 ActionType.class,
                 action.action);
 
@@ -127,22 +125,22 @@ public class BulkActionScreen extends AbstractConfigScreen {
 
         //Category selector button
         DropdownMenuBuilder<ConfigEntry.Category> typeSelector = entryBuilder.startDropdownMenu(
-                new TranslatableText("blanket-client-tweaks.config.chooseCategory"),
+                Text.translatable("blanket-client-tweaks.config.chooseCategory"),
                 DropdownMenuBuilder.TopCellElementBuilder.of(action.category, s -> {
                     try {
                         return ConfigEntry.Category.valueOf(s);
                     } catch(IllegalArgumentException ignore) { }
                     return null;
-                }, anEnum -> new LiteralText(anEnum.toString())),
-                DropdownMenuBuilder.CellCreatorBuilder.of(category1 -> new LiteralText(category1.toString())));
+                }, anEnum -> Text.literal(anEnum.toString())),
+                DropdownMenuBuilder.CellCreatorBuilder.of(category1 -> Text.literal(category1.toString())));
 
         typeSelector.setDefaultValue(ConfigEntry.Category.ALL);
         typeSelector.setSelections(Arrays.stream(ConfigEntry.Category.values()).collect(Collectors.toSet()));
 
 
-        MutableText categoryTypes = new LiteralText("Possible categories:").formatted(Formatting.GOLD);
+        MutableText categoryTypes = Text.literal("Possible categories:").formatted(Formatting.GOLD);
         for (ConfigEntry.Category categoryEnum : ConfigEntry.Category.values()) {
-            categoryTypes.append(new LiteralText("\n" + categoryEnum.toString()).formatted(Formatting.BLUE));
+            categoryTypes.append(Text.literal("\n" + categoryEnum.toString()).formatted(Formatting.BLUE));
         }
         typeSelector.setTooltip(categoryTypes);
 
@@ -154,7 +152,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
 
 
         // Pressable action button
-        PressableButtonEntry actionButton = new PressableButtonEntry(new TranslatableText("blanket-client-tweaks.config.doBulkAction"), () -> {
+        PressableButtonEntry actionButton = new PressableButtonEntry(Text.translatable("blanket-client-tweaks.config.doBulkAction"), () -> {
             if (typeSelectorButton.getError().isPresent()) return;
             action.action = actionSelectorButton.getValue();
             action.category = typeSelectorButton.getValue();
@@ -177,29 +175,29 @@ public class BulkActionScreen extends AbstractConfigScreen {
                     BulkActionScreen.this.client.setScreen(parent);
                 } else BulkActionScreen.this.client.setScreen(BulkActionScreen.this);
 
-            }, new TranslatableText("blanket-client-tweaks.config.confirmTitle"), new TranslatableText(
+            }, Text.translatable("blanket-client-tweaks.config.confirmTitle"), Text.translatable(
                     "blanket-client-tweaks.config.confirmText",
-                    new LiteralText(action.action.toString()).formatted(Formatting.GREEN),
-                    new LiteralText(action.category.toString()).formatted(Formatting.BLUE)
+                    Text.literal(action.action.toString()).formatted(Formatting.GREEN),
+                    Text.literal(action.category.toString()).formatted(Formatting.BLUE)
             )));
         },
                 () -> {
 
-                    Text actionText = new LiteralText(actionSelectorButton.getValue().toString()).formatted(Formatting.GREEN);
+                    Text actionText = Text.literal(actionSelectorButton.getValue().toString()).formatted(Formatting.GREEN);
                     if (typeSelectorButton.getError().isEmpty()) {
                         action.category = typeSelectorButton.getValue();
                     }
 
-                    Text category13 = new LiteralText(action.category.toString()).formatted(Formatting.BLUE);
+                    Text category13 = Text.literal(action.category.toString()).formatted(Formatting.BLUE);
 
 
-                    return new TranslatableText("blanket-client-tweaks.config.doBulkAction", actionText, category13);
+                    return Text.translatable("blanket-client-tweaks.config.doBulkAction", actionText, category13);
                 });
 
         //3 nested lambdas :D
 
 
-        category.add(entryBuilder.startTextDescription(new TranslatableText("blanket-client-tweaks.config.bulkDescription")).build());
+        category.add(entryBuilder.startTextDescription(Text.translatable("blanket-client-tweaks.config.bulkDescription")).build());
         category.add(actionButton);
 
 

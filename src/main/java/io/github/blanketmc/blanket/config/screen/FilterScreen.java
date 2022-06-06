@@ -9,9 +9,7 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 import java.util.*;
@@ -29,7 +27,7 @@ public class FilterScreen extends AbstractConfigScreen {
     private SortMode sortMode = SortMode.DEFAULT;
 
     protected FilterScreen(BlanketConfigScreen parent) {
-        super(parent, new TranslatableText("blanket-client-tweaks.config.filter"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.filter"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 
         for (var category : ConfigEntry.Category.values()) {
             if (category == ConfigEntry.Category.ALL) continue;
@@ -49,7 +47,7 @@ public class FilterScreen extends AbstractConfigScreen {
 
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, new TranslatableText("blanket-client-tweaks.config.filter"), (widget) -> {
+        this.addDrawableChild(new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, Text.translatable("blanket-client-tweaks.config.filter"), (widget) -> {
             this.saveAll(false);
             this.quit();
         }));
@@ -99,7 +97,7 @@ public class FilterScreen extends AbstractConfigScreen {
                 List::add,
                 List::addAll
         );
-        map.put(new LiteralText("bulk"), list);
+        map.put(Text.literal("bulk"), list);
         return map;
     }
 
@@ -109,14 +107,14 @@ public class FilterScreen extends AbstractConfigScreen {
         ConfigEntryBuilder entryBuilder = ConfigEntryBuilder.create();
 
 
-        var sortOrder = entryBuilder.startEnumSelector(new TranslatableText("blanket-client-tweaks.config.order"),
+        var sortOrder = entryBuilder.startEnumSelector(Text.translatable("blanket-client-tweaks.config.order"),
                 SortMode.class,
                 sortMode);
         sortOrder.setSaveConsumer(order -> FilterScreen.this.sortMode = order);
         entries.add(sortOrder.build());
 
 
-        var mode = entryBuilder.startEnumSelector(new TranslatableText("blanket-client-tweaks.config.filterMode"),
+        var mode = entryBuilder.startEnumSelector(Text.translatable("blanket-client-tweaks.config.filterMode"),
                 FilterMode.class,
                 this.filterMode);
         mode.setSaveConsumer(filterMode -> FilterScreen.this.filterMode = filterMode);
@@ -126,7 +124,7 @@ public class FilterScreen extends AbstractConfigScreen {
         for (ConfigEntry.Category category : ConfigEntry.Category.values()) {
             if (category == ConfigEntry.Category.ALL) continue;
 
-            var toggleBuilder = entryBuilder.startBooleanToggle(new LiteralText(category.toString()).formatted(Formatting.BLUE),
+            var toggleBuilder = entryBuilder.startBooleanToggle(Text.literal(category.toString()).formatted(Formatting.BLUE),
                     filteredCategories.contains(category));
 
             toggleBuilder.setSaveConsumer(aBoolean -> {

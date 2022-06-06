@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.util.UrlConversionException;
 import net.fabricmc.loader.impl.util.UrlUtil;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class FabricPlatform implements IPlatform {
@@ -18,8 +19,8 @@ public class FabricPlatform implements IPlatform {
         URL url = loader.getResource(file);
         if (url == null) return null;
         try {
-            if ((url = UrlUtil.getSource(file, url)) != null) return url;
-        } catch (UrlConversionException e) {
+            if ((url = UrlUtil.asUrl(UrlUtil.getCodeSource(url, file))) != null) return url;
+        } catch (UrlConversionException | MalformedURLException | NullPointerException e) {
             e.printStackTrace();
         }
         return null;

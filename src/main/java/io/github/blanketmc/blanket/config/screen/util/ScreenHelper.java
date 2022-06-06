@@ -6,7 +6,7 @@ import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
 import io.github.blanketmc.blanket.config.ExtraProperty;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -45,39 +45,39 @@ public final class ScreenHelper {
     }
 
     public static Text fancyDescription(String desc, ConfigEntry.Category[] categories, String[] issues) {
-        MutableText description = new LiteralText("");
+        MutableText description = Text.literal("");
         if (!desc.equals("")) {
             description = ConfigHelper.getTextComponent(desc, null);
 
-            description = description.formatted(Formatting.YELLOW).append(new LiteralText("\n"));
+            description = description.formatted(Formatting.YELLOW).append(Text.literal("\n"));
 
-            if (issues.length == 0) description.append(new LiteralText("\n"));
+            if (issues.length == 0) description.append(Text.literal("\n"));
         }
 
         if (issues.length > 0) {
-            description.append(new LiteralText("Fixes:\n").formatted(Formatting.DARK_PURPLE));
+            description.append(Text.literal("Fixes:\n").formatted(Formatting.DARK_PURPLE));
 
             Iterator<String> iterator = Arrays.stream(issues).iterator();
             while (iterator.hasNext()) {
                 String issue = iterator.next();
-                description.append(new LiteralText(issue).formatted(Formatting.DARK_AQUA));
+                description.append(Text.literal(issue).formatted(Formatting.DARK_AQUA));
                 if (iterator.hasNext()) {
-                    description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
+                    description.append(Text.literal(" + ").formatted(Formatting.GOLD));
                 }
             }
             description.append("\n\n");
         }
 
-        description.append(new LiteralText("Categories:\n").formatted(Formatting.LIGHT_PURPLE));
+        description.append(Text.literal("Categories:\n").formatted(Formatting.LIGHT_PURPLE));
 
         Iterator<ConfigEntry.Category> iterator = Arrays.stream(categories).iterator();
         while (iterator.hasNext()) {
 
             ConfigEntry.Category category = iterator.next();
-            description.append(new LiteralText(category.toString()).formatted(Formatting.BLUE));
+            description.append(Text.literal(category.toString()).formatted(Formatting.BLUE));
 
             if (iterator.hasNext()) {
-                description.append(new LiteralText(" + ").formatted(Formatting.GOLD));
+                description.append(Text.literal(" + ").formatted(Formatting.GOLD));
             }
         }
         return description;

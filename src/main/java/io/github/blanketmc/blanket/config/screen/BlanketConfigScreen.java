@@ -16,14 +16,14 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Pair;
 
 import java.lang.reflect.Field;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -50,7 +50,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
     private final FilterScreen categorySelectorScreen;
 
     public BlanketConfigScreen(Screen parent) {
-        super(parent, new TranslatableText("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 
         configList = fillConfigList();
         categorySelectorScreen = new FilterScreen(this);
@@ -71,7 +71,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         //entryList.setLeftPos(20);
 
         int menuPos = 40;
-        inputWidget = new TextFieldWidget(this.textRenderer, menuPos, 5, this.width / 3, 20, new LiteralText("Search"));
+        inputWidget = new TextFieldWidget(this.textRenderer, menuPos, 5, this.width / 3, 20, Text.literal("Search"));
         menuPos += this.width / 3 + 10;
         this.addSelectableChild(inputWidget);
 
@@ -84,7 +84,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
         this.setInitialFocus(inputWidget);
         //entryList.setElements(configList);
-        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, new TranslatableText("blanket-client-tweaks.config.filter"), (button) -> {
+        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, Text.translatable("blanket-client-tweaks.config.filter"), (button) -> {
             this.client.setScreen(categorySelectorScreen);
         });
         menuPos += 50;
@@ -92,7 +92,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         this.drawables.add(filterButtonWidget);
 
 
-        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 80, 20, new TranslatableText("blanket-client-tweaks.config.bulk"), (button) -> {
+        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 80, 20, Text.translatable("blanket-client-tweaks.config.bulk"), (button) -> {
             this.client.setScreen(new BulkActionScreen(this));
         });
         this.addSelectableChild(bulkButtonWidget);
@@ -101,7 +101,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(this.quitButton = new ButtonWidget(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20, this.isEdited() ? new TranslatableText("text.cloth-config.cancel_discard") : new TranslatableText("gui.cancel"), (widget) -> {
+        this.addDrawableChild(this.quitButton = new ButtonWidget(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20, this.isEdited() ? Text.translatable("text.cloth-config.cancel_discard") : Text.translatable("gui.cancel"), (widget) -> {
             this.quit();
         }));
         this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> {
@@ -127,7 +127,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
                 }
 
                 this.active = BlanketConfigScreen.this.isEdited() && !hasErrors;
-                this.setMessage(hasErrors ? new TranslatableText("text.cloth-config.error_cannot_save") : new TranslatableText("text.cloth-config.save_and_done"));
+                this.setMessage(hasErrors ? Text.translatable("text.cloth-config.error_cannot_save") : Text.translatable("text.cloth-config.save_and_done"));
                 super.render(matrices, mouseX, mouseY, delta);
             }
         });
@@ -212,7 +212,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
                 List::addAll
         );
 
-        map.put(new LiteralText("blanket"), list);
+        map.put(Text.literal("blanket"), list);
 
         return map;
     }

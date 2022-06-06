@@ -1,11 +1,11 @@
 package io.github.blanketmc.blanket.config;
 
-import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.ClientFixes;
+import io.github.blanketmc.blanket.Config;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextContent;
 import net.minecraft.util.Pair;
 import org.apache.logging.log4j.Level;
 
@@ -84,13 +84,13 @@ public final class ConfigHelper {
     public static MutableText getTextComponent(String str, String ifNull) {
         if (str.equals("")) {
             if (ifNull == null) throw new IllegalArgumentException();
-            return new LiteralText(ifNull);
+            return Text.literal(ifNull);
         }
 
         if (str.startsWith("blanket-client-tweaks.")) {
-            return new TranslatableText(str);
+            return Text.translatable(str);
         }
-        return new LiteralText(str);
+        return Text.literal(str);
     }
 
     public static void saveConfig() {

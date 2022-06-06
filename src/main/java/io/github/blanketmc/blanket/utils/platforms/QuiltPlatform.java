@@ -24,6 +24,4 @@ public class QuiltPlatform implements IPlatform {
         }
         return null;
     }
-
-
 }

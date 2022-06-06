@@ -10,7 +10,6 @@ import me.shedaniel.math.Rectangle;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -29,10 +28,10 @@ public class FirstElementAlwaysDisplaySubCategoryEntry extends AbstractConfigLis
 
 
     public FirstElementAlwaysDisplaySubCategoryEntry(AbstractConfigEntry configListEntry, List<AbstractConfigListEntry> extraConfigEntries, AbstractConfigScreen screen) {
-        super(LiteralText.EMPTY, false);
+        super(Text.literal(""), false);
         this.configEntry = configListEntry;
 
-        var listBuilder = ConfigEntryBuilder.create().startSubCategory(LiteralText.EMPTY, extraConfigEntries);
+        var listBuilder = ConfigEntryBuilder.create().startSubCategory(Text.literal(""), extraConfigEntries);
         this.extraConfigListEntry = listBuilder.build();
         this.extraConfigListEntry.setScreen(screen);
 

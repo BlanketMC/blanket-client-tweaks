@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 
 import io.github.blanketmc.blanket.Config;
 import io.github.blanketmc.blanket.fixes.RotatePlayerWithMinecart;
+import net.minecraft.network.encryption.PlayerPublicKey;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,11 +22,11 @@ import net.minecraft.entity.vehicle.MinecartEntity;
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayer_rotatePlayerWithMinecart extends AbstractClientPlayerEntity {
 
-    @Shadow public abstract float getYaw(float tickDelta);
-
-    public ClientPlayer_rotatePlayerWithMinecart(ClientWorld world, GameProfile profile) {
-        super(world, profile);
+    public ClientPlayer_rotatePlayerWithMinecart(ClientWorld world, GameProfile profile, @Nullable PlayerPublicKey publicKey) {
+        super(world, profile, publicKey);
     }
+
+    @Shadow public abstract float getYaw(float tickDelta);
 
 
     @Inject(

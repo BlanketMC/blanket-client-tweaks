@@ -9,7 +9,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.NarratorManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -35,7 +35,7 @@ public class PressableButtonEntry extends AbstractConfigListEntry<Object> {
         Window window = MinecraftClient.getInstance().getWindow();
         this.actionButton.active = this.isEditable();
         this.actionButton.y = y;
-        this.actionButton.setMessage(new LiteralText("[X]").formatted(Formatting.RED));
+        this.actionButton.setMessage(Text.literal("[X]").formatted(Formatting.RED));
         Text displayedFieldName = this.displayTextSupplier.get();
         if (MinecraftClient.getInstance().textRenderer.isRightToLeft()) {
             MinecraftClient.getInstance().textRenderer.drawWithShadow(matrices, displayedFieldName.asOrderedText(), (float)(window.getScaledWidth() - x - MinecraftClient.getInstance().textRenderer.getWidth(displayedFieldName)), (float)(y + 6), 16777215);
