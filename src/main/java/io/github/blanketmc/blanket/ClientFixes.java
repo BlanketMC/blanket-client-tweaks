@@ -1,8 +1,13 @@
 package io.github.blanketmc.blanket;
 
+import com.mojang.brigadier.CommandDispatcher;
 import io.github.blanketmc.blanket.config.ConfigHelper;
+import io.github.blanketmc.blanket.utils.ClientCommands;
 import io.github.blanketmc.blanket.utils.KeyBindings;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.command.CommandRegistryAccess;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +30,12 @@ public class ClientFixes implements ClientModInitializer {
 		log(Level.INFO, "Loading Blanket, enabling " + countEnabledFeatures() + " feature(s).", true);
 
 		KeyBindings.init();
+		ClientCommandRegistrationCallback.EVENT.register(new ClientCommandRegistrationCallback() {
+			@Override
+			public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
+				ClientCommands.registerCommands(dispatcher);
+			}
+		});
 	}
 
 	public static int countEnabledFeatures() {

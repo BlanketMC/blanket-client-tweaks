@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_16",
   "client": [
     "fixes.ClientPlayer_rotatePlayerWithMinecart",
-    "clientCommands.ClientPlayerEntity_clientCommandsMixin",
-    "clientCommands.ClientPlayNetworkHandler_clientCommandsMixin",
     "fixes.EnderDragonEntityRenderer_crystalMixin",
     "fixes.Entity_clientDamageMixin",
     "fixes.Entity_lavaDamageMixin",
