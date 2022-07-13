@@ -1,7 +1,6 @@
 package io.github.blanketmc.blanket.utils;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,19 +8,18 @@ import io.github.blanketmc.blanket.ClientFixes;
 import io.github.blanketmc.blanket.config.ConfigEntry;
 import io.github.blanketmc.blanket.config.ConfigHelper;
 import io.github.blanketmc.blanket.config.EntryListener;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 import java.lang.reflect.Field;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import static io.github.blanketmc.blanket.ClientFixes.config;
 
@@ -32,22 +30,22 @@ public class ClientCommands {
     public static final String PREFIX = "client-fixes";
 
 
-    public static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher) {
-        LiteralArgumentBuilder<ServerCommandSource> builder = CommandManager.literal(PREFIX);
+    public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        LiteralArgumentBuilder<FabricClientCommandSource> builder = ClientCommandManager.literal(PREFIX);
         builder.executes((c) -> {sendToPlayer("/"+PREFIX+" [list/<entry>]");return 1;});
         ConfigHelper.iterateOnConfig((field, configEntry) -> {
-            builder.then(CommandManager.literal(field.getName())
-                            .then(CommandManager.argument("value", StringArgumentType.word()).executes((c) -> modifyEntry(c,field, configEntry)))
+            builder.then(ClientCommandManager.literal(field.getName())
+                            .then(ClientCommandManager.argument("value", StringArgumentType.word()).executes((c) -> modifyEntry(c,field, configEntry)))
                     .executes((c) -> getEntryInfo(field, configEntry)));
         });
-        builder.then(CommandManager.literal("list")
-                .then(CommandManager.argument("category",new EnumArgumentType<>(ConfigEntry.Category.class)).executes(ClientCommands::listCategoryEntries))
+        builder.then(ClientCommandManager.literal("list")
+                .then(ClientCommandManager.argument("category",new EnumArgumentType<>(ConfigEntry.Category.class)).executes(ClientCommands::listCategoryEntries))
                 .executes(ClientCommands::listCategories)
         );
         dispatcher.register(builder);
     }
 
-    private static int listCategories(CommandContext<ServerCommandSource> context) {
+    private static int listCategories(CommandContext<FabricClientCommandSource> context) {
         MutableText description = Text.literal("\n§f§lCategories:\n");
         for (ConfigEntry.Category category : ConfigEntry.Category.values()) {
             description.append(Text.literal(category.name().toLowerCase()+"\n").styled((style) -> {
@@ -58,7 +56,7 @@ public class ClientCommands {
         return 1;
     }
 
-    private static int listCategoryEntries(CommandContext<ServerCommandSource> context) {
+    private static int listCategoryEntries(CommandContext<FabricClientCommandSource> context) {
         ConfigEntry.Category category = context.getArgument("category", ConfigEntry.Category.class);
         List<Field> entries = ConfigHelper.getConfigFieldsForCategory(category);
         MutableText description = Text.literal("\n§f§l"+category.name()+":\n");
@@ -71,7 +69,7 @@ public class ClientCommands {
         return 1;
     }
 
-    private static int modifyEntry(CommandContext<ServerCommandSource> context, Field field, ConfigEntry configEntry) {
+    private static int modifyEntry(CommandContext<FabricClientCommandSource> context, Field field, ConfigEntry configEntry) {
         try {
             String value = StringArgumentType.getString(context, "value");
             if (field.getType().equals(Boolean.TYPE)) {
@@ -202,27 +200,4 @@ public class ClientCommands {
         return description;
     }
 
-    public static boolean isClientSideCommand(String[] args) {
-        return (args.length > 0 && PREFIX.equals(args[0]));
-    }
-
-    public static int executeCommand(StringReader reader) {
-        ClientPlayerEntity player = mc.player;
-        try {
-            return player.networkHandler.getCommandDispatcher().execute(reader, new FakeCommandSource(player));
-        } catch (Exception e) {
-            ClientFixes.LOGGER.error("Error executing client command", e);
-            return 1;
-        }
-    }
-
-    public static class FakeCommandSource extends ServerCommandSource {
-        public FakeCommandSource(ClientPlayerEntity player) {
-            super(player, player.getPos(), player.getRotationClient(), null, 0, player.getEntityName(), player.getName(), null, player);
-        }
-
-        public Collection<String> getPlayerNames() {
-            return mc.getNetworkHandler().getPlayerList().stream().map(e -> e.getProfile().getName()).collect(Collectors.toList());
-        }
-    }
 }
