@@ -20,10 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -136,6 +133,28 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
     }
 
+
+    @Override
+    public boolean matchesSearch(Iterator<String> tags) {
+        String searchText = inputWidget.getText();
+        if (searchText.length() == 0) {
+            return true;
+        } else if (!tags.hasNext()) {
+            return true;
+        } else {
+            boolean found = false;
+
+            while (tags.hasNext()){
+                String tag = tags.next();
+                if (tag.toLowerCase(Locale.ROOT).contains(searchText.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            return found;
+        }
+    }
 
     public void setSearch(String str) {
         searchString = str;

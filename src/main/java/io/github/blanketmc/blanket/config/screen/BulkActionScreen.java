@@ -85,6 +85,11 @@ public class BulkActionScreen extends AbstractConfigScreen {
         return map;
     }
 
+    @Override
+    public boolean matchesSearch(Iterator<String> iterator) {
+        return true;
+    }
+
     private enum ActionType {
         ENABLE(b -> true),
         DISABLE(b -> false),

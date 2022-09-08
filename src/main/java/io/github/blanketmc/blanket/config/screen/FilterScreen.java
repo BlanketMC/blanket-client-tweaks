@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class FilterScreen extends AbstractConfigScreen {
 
     private BlanketConfigEntryList entries;
-    private List<Drawable> drawables = new ArrayList<>();
+    private final List<Drawable> drawables = new ArrayList<>();
 
     private final List<AbstractConfigEntry> entryList;
     private /*static*/ final Set<ConfigEntry.Category> filteredCategories = new HashSet<>();
@@ -90,6 +90,11 @@ public class FilterScreen extends AbstractConfigScreen {
     }
 
     @Override
+    public boolean matchesSearch(Iterator<String> iterator) {
+        return true;
+    }
+
+    @Override
     public Map<Text, List<AbstractConfigEntry<?>>> getCategorizedEntries() {
         Map<Text, List<AbstractConfigEntry<?>>> map = new HashMap<>();
         List<AbstractConfigEntry<?>> list = this.entryList.stream().collect(
@@ -153,7 +158,7 @@ public class FilterScreen extends AbstractConfigScreen {
         DECREASING(-1),
         ;
         final int order;
-        private SortMode(int order) {
+        SortMode(int order) {
             this.order = order;
         }
     }
