@@ -1,18 +1,17 @@
 package io.github.blanketmc.blanket.mixin.fixes;
 
 import io.github.blanketmc.blanket.Config;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(Entity.class)
 public class Entity_clientDamageMixin {
 

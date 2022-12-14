@@ -4,10 +4,12 @@ import io.github.blanketmc.blanket.Config;
 import net.minecraft.client.render.entity.EnderDragonEntityRenderer;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@ClientOnly
 @Mixin(EnderDragonEntityRenderer.class)
 public class EnderDragonEntityRenderer_crystalMixin {
 

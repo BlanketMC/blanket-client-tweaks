@@ -47,10 +47,10 @@ public class FilterScreen extends AbstractConfigScreen {
 
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, Text.translatable("blanket-client-tweaks.config.filter"), (widget) -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("blanket-client-tweaks.config.filter"), (widget) -> {
             this.saveAll(false);
             this.quit();
-        }));
+        }).dimensions((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20).build());
         /*
         this.addDrawableChild(this.resetButton = new ButtonWidget(this.width / 4 - buttonWidths/2, 10, buttonWidths, 20, new TranslatableText("gui.resetAll"), (widget) -> {
             for (var entry : entryList) {

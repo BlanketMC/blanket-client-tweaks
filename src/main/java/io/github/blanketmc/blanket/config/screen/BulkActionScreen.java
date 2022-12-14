@@ -53,7 +53,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
         this.addSelectableChild(entryList);
 
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(this.quitButton = new ButtonWidget((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20, Text.translatable("gui.cancel"), (widget) -> this.quit()));
+        this.addDrawableChild(this.quitButton = ButtonWidget.builder(Text.translatable("gui.cancel"), (widget) -> this.quit()).dimensions((this.width + buttonWidths) / 2 - buttonWidths, this.height - 26, buttonWidths, 20).build());
 
         super.init();
     }

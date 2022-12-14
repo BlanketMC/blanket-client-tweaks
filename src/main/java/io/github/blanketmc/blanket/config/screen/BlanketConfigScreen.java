@@ -81,38 +81,37 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
         this.setInitialFocus(inputWidget);
         //entryList.setElements(configList);
-        ButtonWidget filterButtonWidget = new ButtonWidget(menuPos, 5, 40, 20, Text.translatable("blanket-client-tweaks.config.filter"), (button) -> {
+        ButtonWidget filterButtonWidget = ButtonWidget.builder(Text.translatable("blanket-client-tweaks.config.filter"), (button) -> {
             this.client.setScreen(categorySelectorScreen);
-        });
+        }).dimensions(menuPos, 5, 40, 20).build();
+
         menuPos += 50;
         this.addSelectableChild(filterButtonWidget);
         this.drawables.add(filterButtonWidget);
 
 
-        ButtonWidget bulkButtonWidget = new ButtonWidget(menuPos, 5, 80, 20, Text.translatable("blanket-client-tweaks.config.bulk"), (button) -> {
+        ButtonWidget bulkButtonWidget = ButtonWidget.builder(Text.translatable("blanket-client-tweaks.config.bulk"), (button) -> {
             this.client.setScreen(new BulkActionScreen(this));
-        });
+        }).dimensions(menuPos, 5, 80, 20).build();
+
         this.addSelectableChild(bulkButtonWidget);
         this.drawables.add(bulkButtonWidget);
 
 
-
         int buttonWidths = Math.min(200, (this.width - 50 - 12) / 3);
-        this.addDrawableChild(this.quitButton = new ButtonWidget(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20, this.isEdited() ? Text.translatable("text.cloth-config.cancel_discard") : Text.translatable("gui.cancel"), (widget) -> {
+
+        this.addDrawableChild(this.quitButton = ButtonWidget.builder(this.isEdited() ? Text.translatable("text.cloth-config.cancel_discard") : Text.translatable("gui.cancel"), (widget) -> {
             this.quit();
-        }));
-        this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> {
-            this.saveAll(true);
-        }) {
+        }).dimensions(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20).build());
+
+        this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> this.saveAll(true), Supplier::get) {
             public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 boolean hasErrors = false;
 
                 for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(BlanketConfigScreen.this.getCategorizedEntries().values())) {
-                    List<AbstractConfigEntry<?>> entries = abstractConfigEntries;
 
-                    for (AbstractConfigEntry<?> abstractConfigEntry : entries) {
-                        AbstractConfigEntry<?> entry = abstractConfigEntry;
-                        if (entry.getConfigError().isPresent()) {
+                    for (AbstractConfigEntry<?> abstractConfigEntry : abstractConfigEntries) {
+                        if (abstractConfigEntry.getConfigError().isPresent()) {
                             hasErrors = true;
                             break;
                         }

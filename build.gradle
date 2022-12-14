@@ -3,7 +3,7 @@ plugins {
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.+'
 	id "com.modrinth.minotaur" version "2.+"
-	id 'io.github.juuxel.loom-quiltflower' version '1.7.+'
+	id 'io.github.juuxel.loom-quiltflower' version '1.8.+'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -127,7 +127,7 @@ if(keysExists) {
 		projectId = "gxpkKtVH"
 		versionNumber = "${project.mod_version}"
 		versionName = "${project.mod_version}"
-		gameVersions = ['1.19', '1.19.1', '1.19.2']
+		gameVersions = ['1.19.3']
 		changelog = changes
 		loaders = ["fabric", "quilt"]
 		uploadFile = remapJar
@@ -141,9 +141,7 @@ if(keysExists) {
 			changelog = changes
 			releaseType = project.cfType
 
-			addGameVersion "1.19"
-			addGameVersion "1.19.1"
-			addGameVersion "1.19.2"
+			addGameVersion "1.19.3"
 			addGameVersion "Fabric"
 
 			relations {

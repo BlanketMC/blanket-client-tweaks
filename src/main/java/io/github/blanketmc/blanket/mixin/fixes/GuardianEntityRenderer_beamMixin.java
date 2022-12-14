@@ -3,10 +3,12 @@ package io.github.blanketmc.blanket.mixin.fixes;
 import io.github.blanketmc.blanket.Config;
 import net.minecraft.client.render.entity.GuardianEntityRenderer;
 import net.minecraft.world.World;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@ClientOnly
 @Mixin(GuardianEntityRenderer.class)
 public abstract class GuardianEntityRenderer_beamMixin {
 

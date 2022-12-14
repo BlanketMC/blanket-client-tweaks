@@ -1,14 +1,13 @@
 package io.github.blanketmc.blanket.mixin.performance;
 
 import io.github.blanketmc.blanket.Config;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.SeedMixer;
+import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Optimized getBiome call: Reduce the number of calls to the mess of
  * {@link net.minecraft.world.biome.source.SeedMixer#mixSeed(long, long)} which is pretty heavy on performance.
- *
+ * <p>
  * We are able to do this by skipping around 370 of 512 possible calls to getBiome() by predicting the outcome
  * before doing the seed mixing. This seems to be around 25% - 75% faster depending on the use case.
  * We can predict much faster than the seed mixing.
@@ -27,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author FX - PR0CESS
  */
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(BiomeAccess.class)
 public class BiomeAccess_predictionMixin {
 
