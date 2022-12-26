@@ -1,0 +1,16 @@
+{
+  "blanket-client-tweaks.config.title": "Blanket Client Fixes",
+  "blanket-client-tweaks.config.general": "切换功能",
+  "blanket-client-tweaks.config.bulk": "批量切换",
+  "blanket-client-tweaks.config.chooseBulk": "行动",
+  "blanket-client-tweaks.config.chooseCategory": "类别",
+  "blanket-client-tweaks.config.bulkDescription": "设置行动和类别，然后按大的红色 X 按钮",
+  "blanket-client-tweaks.config.doBulkAction": "%s所有%s的调整 --->",
+  "blanket-client-tweaks.config.confirmTitle": "你真的想做批量行动吗？",
+  "blanket-client-tweaks.config.confirmText": "你真的想\n%s所有%s的调整吗？",
+  "blanket-client-tweaks.keys.rotateMinecartKey": "切换：与矿车一同旋转",
+  "blanket-client-tweaks.keys.category": "Blanket 客户端",
+  "blanket-client-tweaks.config.filterMode": "过滤模式",
+  "blanket-client-tweaks.config.filter": "过滤器",
+  "blanket-client-tweaks.config.order": "排列顺序："
+}
