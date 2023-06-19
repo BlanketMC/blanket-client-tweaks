@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.1-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.+'
 	id "com.modrinth.minotaur" version "2.+"
@@ -127,7 +127,7 @@ if(keysExists) {
 		projectId = "gxpkKtVH"
 		versionNumber = "${project.mod_version}"
 		versionName = "${project.mod_version}"
-		gameVersions = ['1.19.3']
+		gameVersions = ['1.20.1']
 		changelog = changes
 		loaders = ["fabric", "quilt"]
 		uploadFile = remapJar
@@ -141,7 +141,7 @@ if(keysExists) {
 			changelog = changes
 			releaseType = project.cfType
 
-			addGameVersion "1.19.3"
+			addGameVersion "1.20.1"
 			addGameVersion "Fabric"
 
 			relations {

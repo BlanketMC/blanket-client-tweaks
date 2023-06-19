@@ -7,9 +7,9 @@ import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.entries.SubCategoryListEntry;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import me.shedaniel.math.Rectangle;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -38,10 +38,10 @@ public class FirstElementAlwaysDisplaySubCategoryEntry extends AbstractConfigLis
     }
 
     @Override
-    public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
+    public void render(DrawContext graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isHovered, float delta) {
         //Render both at the same starting position
-        extraConfigListEntry.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
-        configEntry.render(matrices, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
+        extraConfigListEntry.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
+        configEntry.render(graphics, index, y, x, entryWidth, entryHeight, mouseX, mouseY, isHovered, delta);
     }
 
     @Override
@@ -150,21 +150,12 @@ public class FirstElementAlwaysDisplaySubCategoryEntry extends AbstractConfigLis
         return super.charTyped(chr, modifiers);
     }
 
-    @Override
-    public void setInitialFocus(@Nullable Element element) {
-        super.setInitialFocus(element);
-    }
 
     @Override
     public void focusOn(@Nullable Element element) {
         super.focusOn(element);
         configEntry.focusOn(element);
         extraConfigListEntry.focusOn(element);
-    }
-
-    @Override
-    public boolean changeFocus(boolean lookForwards) {
-        return super.changeFocus(lookForwards);
     }
 
     @Override

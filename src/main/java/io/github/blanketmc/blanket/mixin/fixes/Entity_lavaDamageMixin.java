@@ -12,10 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @ClientOnly
 @Mixin(Entity.class)
-public class Entity_lavaDamageMixin {
+public abstract class Entity_lavaDamageMixin {
 
-    @Shadow public World world;
-
+    @Shadow public abstract World getWorld();
 
     @Inject(
             method = "isFireImmune()Z",
@@ -23,6 +22,6 @@ public class Entity_lavaDamageMixin {
             cancellable = true
     )
     public void isFireImmuneAndServerSide(CallbackInfoReturnable<Boolean> cir) {
-        if (Config.lavaDamageDesyncFix && this.world.isClient()) cir.setReturnValue(true);
+        if (Config.lavaDamageDesyncFix && this.getWorld().isClient()) cir.setReturnValue(true);
     }
 }

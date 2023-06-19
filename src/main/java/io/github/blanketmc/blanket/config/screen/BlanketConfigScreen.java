@@ -9,13 +9,12 @@ import io.github.blanketmc.blanket.config.screen.widget.FirstElementAlwaysDispla
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.NarratorManager;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
@@ -47,7 +46,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
     private final FilterScreen categorySelectorScreen;
 
     public BlanketConfigScreen(Screen parent) {
-        super(parent, Text.translatable("blanket-client-tweaks.config.title"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.title"), OPTIONS_BACKGROUND_TEXTURE);
 
         configList = fillConfigList();
         categorySelectorScreen = new FilterScreen(this);
@@ -105,7 +104,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         }).dimensions(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20).build());
 
         this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> this.saveAll(true), Supplier::get) {
-            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
                 boolean hasErrors = false;
 
                 for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(BlanketConfigScreen.this.getCategorizedEntries().values())) {
@@ -124,7 +123,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
                 this.active = BlanketConfigScreen.this.isEdited() && !hasErrors;
                 this.setMessage(hasErrors ? Text.translatable("text.cloth-config.error_cannot_save") : Text.translatable("text.cloth-config.save_and_done"));
-                super.render(matrices, mouseX, mouseY, delta);
+                super.render(graphics, mouseX, mouseY, delta);
             }
         });
         this.drawables.add(saveButton);
@@ -237,18 +236,18 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
 
-        this.entryList.render(matrices, mouseX, mouseY, delta);
+        this.entryList.render(graphics, mouseX, mouseY, delta);
 
         //The search box
-        this.inputWidget.render(matrices, mouseX, mouseY, delta);
+        this.inputWidget.render(graphics, mouseX, mouseY, delta);
 
         for(Drawable drawable : drawables) {
-            drawable.render(matrices, mouseX, mouseY, delta);
+            drawable.render(graphics, mouseX, mouseY, delta);
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta);
     }
 }

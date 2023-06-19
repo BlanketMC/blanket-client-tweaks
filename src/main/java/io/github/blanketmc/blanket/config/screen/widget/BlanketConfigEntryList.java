@@ -1,17 +1,14 @@
 package io.github.blanketmc.blanket.config.screen.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
 import me.shedaniel.clothconfig2.gui.ClothConfigScreen;
 import me.shedaniel.clothconfig2.gui.widget.DynamicElementListWidget;
-import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.screen.Screen;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class BlanketConfigEntryList<E extends DynamicElementListWidget.ElementEntry<E>> extends ClothConfigScreen.ListWidget<E> {
@@ -24,7 +21,7 @@ public class BlanketConfigEntryList<E extends DynamicElementListWidget.ElementEn
 
 
     public BlanketConfigEntryList(AbstractConfigScreen screen, MinecraftClient client, int width, int height, int top, int bottom) {
-        super(screen, client, width, height, top, bottom, OPTIONS_BACKGROUND_TEXTURE);
+        super(screen, client, width, height, top, bottom, Screen.OPTIONS_BACKGROUND_TEXTURE);
     }
 
     public void setElements(List<E> elements) {

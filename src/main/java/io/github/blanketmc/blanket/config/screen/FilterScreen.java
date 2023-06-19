@@ -5,8 +5,8 @@ import io.github.blanketmc.blanket.config.screen.widget.BlanketConfigEntryList;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.AbstractConfigScreen;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -27,7 +27,7 @@ public class FilterScreen extends AbstractConfigScreen {
     private SortMode sortMode = SortMode.DEFAULT;
 
     protected FilterScreen(BlanketConfigScreen parent) {
-        super(parent, Text.translatable("blanket-client-tweaks.config.filter"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.filter"), OPTIONS_BACKGROUND_TEXTURE);
 
         for (var category : ConfigEntry.Category.values()) {
             if (category == ConfigEntry.Category.ALL) continue;
@@ -61,17 +61,17 @@ public class FilterScreen extends AbstractConfigScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
 
-        entries.render(matrices, mouseX, mouseY, delta);
+        entries.render(graphics, mouseX, mouseY, delta);
 
         for (Drawable drawable : drawables) {
-            drawable.render(matrices, mouseX, mouseY, delta);
+            drawable.render(graphics, mouseX, mouseY, delta);
         }
 
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 4 * 3, 10, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+        graphics.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 4 * 3, 10, 16777215);
+        super.render(graphics, mouseX, mouseY, delta);
     }
 
     @Override

@@ -12,11 +12,10 @@ import me.shedaniel.clothconfig2.gui.entries.EnumListEntry;
 import me.shedaniel.clothconfig2.impl.builders.DropdownMenuBuilder;
 import me.shedaniel.clothconfig2.impl.builders.EnumSelectorBuilder;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -38,7 +37,7 @@ public class BulkActionScreen extends AbstractConfigScreen {
     private ButtonWidget quitButton;
 
     protected BulkActionScreen(BlanketConfigScreen parent) {
-        super(parent, Text.translatable("blanket-client-tweaks.config.bulk"), DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+        super(parent, Text.translatable("blanket-client-tweaks.config.bulk"), OPTIONS_BACKGROUND_TEXTURE);
         List<AbstractConfigEntry> entries = new ArrayList<>();
         addBulkModeCategory(entries, ConfigEntryBuilder.create(), parent);
         entriesList = entries;
@@ -59,18 +58,18 @@ public class BulkActionScreen extends AbstractConfigScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+        this.renderBackground(graphics);
 
-        entryList.render(matrices, mouseX, mouseY, delta);
+        entryList.render(graphics, mouseX, mouseY, delta);
         for (Drawable drawable : drawables) {
-            drawable.render(matrices, mouseX, mouseY, delta);
+            drawable.render(graphics, mouseX, mouseY, delta);
         }
 
 
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
+        graphics.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 10, 16777215);
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta);
     }
 
     @Override
