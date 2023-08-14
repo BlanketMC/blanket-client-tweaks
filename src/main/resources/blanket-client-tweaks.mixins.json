@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "io.github.blanketmc.blanket.mixin",
   "compatibilityLevel": "JAVA_16",
+  "plugin": "io.github.blanketmc.blanket.MixinPlugin",
   "client": [
     "fixes.ClientPlayer_rotatePlayerWithMinecart",
     "fixes.EnderDragonEntityRenderer_crystalMixin",
