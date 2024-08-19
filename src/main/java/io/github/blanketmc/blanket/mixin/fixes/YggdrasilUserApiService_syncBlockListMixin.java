@@ -31,12 +31,12 @@ public abstract class YggdrasilUserApiService_syncBlockListMixin {
         return this.fetchBlockList();
     }
 
-    @Redirect(method = "forceFetchBlockList", at = @At(value = "INVOKE", target = "Lcom/mojang/authlib/yggdrasil/response/BlockListResponse;getBlockedProfiles()Ljava/util/Set;"))
+    @Redirect(method = "forceFetchBlockList", at = @At(value = "INVOKE", target = "Lcom/mojang/authlib/yggdrasil/response/BlockListResponse;blockedProfiles()Ljava/util/Set;"))
     private Set<UUID> forceFetchDontReturnNull(BlockListResponse instance) {
         if (Config.chatLagFix) {
-            Set<UUID> uuids = instance.getBlockedProfiles();
+            Set<UUID> uuids = instance.blockedProfiles();
             return uuids == null ? new HashSet<>() : uuids;
         }
-        return instance.getBlockedProfiles();
+        return instance.blockedProfiles();
     }
 }

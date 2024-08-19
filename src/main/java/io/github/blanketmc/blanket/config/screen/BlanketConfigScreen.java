@@ -104,7 +104,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
         }).dimensions(this.width / 2 - buttonWidths - 3, this.height - 26, buttonWidths, 20).build());
 
         this.addDrawableChild(this.saveButton = new ButtonWidget(this.width / 2 + 3, this.height - 26, buttonWidths, 20, NarratorManager.EMPTY, (button) -> this.saveAll(true), Supplier::get) {
-            public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
+            public void renderWidget(DrawContext graphics, int mouseX, int mouseY, float delta) {
                 boolean hasErrors = false;
 
                 for (List<AbstractConfigEntry<?>> abstractConfigEntries : Lists.newArrayList(BlanketConfigScreen.this.getCategorizedEntries().values())) {
@@ -123,7 +123,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
                 this.active = BlanketConfigScreen.this.isEdited() && !hasErrors;
                 this.setMessage(hasErrors ? Text.translatable("text.cloth-config.error_cannot_save") : Text.translatable("text.cloth-config.save_and_done"));
-                super.render(graphics, mouseX, mouseY, delta);
+                super.renderWidget(graphics, mouseX, mouseY, delta);
             }
         });
         this.drawables.add(saveButton);
@@ -237,7 +237,7 @@ public class BlanketConfigScreen extends AbstractConfigScreen {
 
     @Override
     public void render(DrawContext graphics, int mouseX, int mouseY, float delta) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, delta);
 
         this.entryList.render(graphics, mouseX, mouseY, delta);
 

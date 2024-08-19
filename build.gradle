@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
 	id 'com.matthewprenger.cursegradle' version '1.4.+'
 	id "com.modrinth.minotaur" version "2.+"
@@ -15,6 +15,7 @@ repositories {
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven { url "https://maven.quiltmc.org/repository/release" }
+	maven { url "https://maven.nucleoid.xyz" } // ModMenu depends on eu.pb4.placeholder-api
 }
 
 dependencies {
@@ -126,7 +127,7 @@ if(keysExists) {
 		projectId = "gxpkKtVH"
 		versionNumber = "${project.mod_version}"
 		versionName = "${project.mod_version}"
-		gameVersions = ['1.20.1']
+		gameVersions = ['1.20.4']
 		changelog = changes
 		loaders = ["fabric", "quilt"]
 		uploadFile = remapJar
@@ -140,7 +141,7 @@ if(keysExists) {
 			changelog = changes
 			releaseType = project.cfType
 
-			addGameVersion "1.20.1"
+			addGameVersion "1.20.4"
 			addGameVersion "Fabric"
 
 			relations {
